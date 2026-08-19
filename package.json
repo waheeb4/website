@@ -9,7 +9,7 @@
     "dev": "astro dev",
     "build": "astro build",
     "check": "astro check",
-    "format": "prettier --check src/ package.json",
+    "format": "prettier --check --no-error-on-unmatched-pattern src/ package.json",
     "preview": "astro preview",
     "astro": "astro"
   },
