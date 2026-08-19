@@ -25,3 +25,6 @@ pnpm-debug.log*
 
 # agents
 AGENTS.md
+
+# migration
+reference/
