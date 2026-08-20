@@ -1,0 +1,21 @@
+---
+interface Props {
+  title: string;
+  description: string;
+  og: {
+    image: string;
+    alt: string;
+    type: string;
+  };
+}
+
+const { title, description, og } = Astro.props;
+---
+
+<title>{title}</title>
+<meta name="description" content={description} />
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:image" content={og.image} />
+<meta property="og:image:alt" content={og.alt} />
+<meta property="og:type" content={og.type} />
