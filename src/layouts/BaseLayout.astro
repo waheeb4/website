@@ -1,11 +1,9 @@
 ---
 import BaseHead from "../components/BaseHead.astro";
-import type { ComponentProps } from "astro/types";
-
-type BaseHeadProps = ComponentProps<typeof BaseHead>;
+import type { Metadata } from "../types";
 
 interface Props {
-  metadata: BaseHeadProps;
+  metadata: Metadata;
 }
 
 const { metadata } = Astro.props;
@@ -15,7 +13,7 @@ const { metadata } = Astro.props;
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <BaseHead {...metadata} />
+    <BaseHead {metadata} />
   </head>
   <body>
     <main>
