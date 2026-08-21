@@ -28,8 +28,8 @@ jobs:
       - name: Check Astro project
         run: bun run check
 
-      - name: Format code 
-        run: bun run format
+      - name: Check code format
+        run: bun run format:check
 
       - name: Build site
         run: bun run build
