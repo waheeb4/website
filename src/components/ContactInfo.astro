@@ -5,74 +5,56 @@ import LinkedIn from "../assets/linkedin.svg";
 import logo from "../assets/logo.png";
 import Mail from "../assets/mail.svg";
 
-const contact = {
-  email: "mailto:triton.rov1@gmail.com",
-  facebook: "https://www.facebook.com/triton.rov",
-  instagram: "https://www.instagram.com/triton.rov",
-  linkedin: "https://www.linkedin.com/company/triton-rov/",
-  copyright: "© 2026 | Triton",
-};
+const info = [
+  { tag: Mail, label: "Email", link: "mailto:triton.rov1@gmail.com" },
+  {
+    tag: Facebook,
+    label: "Facebook",
+    link: "https://www.facebook.com/triton.rov",
+  },
+  {
+    tag: Instagram,
+    label: "Instagram",
+    link: "https://www.instagram.com/triton.rov",
+  },
+  {
+    tag: LinkedIn,
+    label: "LinkedIn",
+    link: "https://www.linkedin.com/company/triton-rov/",
+  },
+];
 ---
 
 <footer class="contact">
   <h2 class="contact-title">Contact Us</h2>
-
   <ul class="contact-links" aria-label="Contact links">
-    <li>
-      <a class="contact-link" href={contact.email} aria-label="Triton's Email">
-        <Mail class="contact-icon" aria-hidden="true" width="20" height="20" />
-      </a>
-    </li>
-    <li>
-      <a
-        class="contact-link"
-        href={contact.facebook}
-        aria-label="Triton's Facebook"
-      >
-        <Facebook
-          class="contact-icon"
-          aria-hidden="true"
-          width="20"
-          height="20"
-          fill="currentColor"
-        />
-      </a>
-    </li>
-    <li>
-      <a
-        class="contact-link"
-        href={contact.instagram}
-        aria-label="Triton's Instagram"
-      >
-        <Instagram
-          class="contact-icon"
-          aria-hidden="true"
-          width="20"
-          height="20"
-          fill="currentColor"
-        />
-      </a>
-    </li>
-    <li>
-      <a
-        class="contact-link"
-        href={contact.linkedin}
-        aria-label="Triton's LinkedIn"
-      >
-        <LinkedIn
-          class="contact-icon"
-          aria-hidden="true"
-          width="20"
-          height="20"
-          fill="currentColor"
-        />
-      </a>
-    </li>
+    {
+      info.map((info) => {
+        const Tag = info.tag;
+        return (
+          <li>
+            <a
+              class="contact-link"
+              href={info.link}
+              aria-label={`Triton's ${info.label}`}
+            >
+              <Tag
+                class="contact-icon"
+                aria-hidden="true"
+                width="20"
+                height="20"
+                fill="currentColor"
+              />
+            </a>
+          </li>
+        );
+      })
+    }
   </ul>
 
   <div class="contact-brand">
     <img class="contact-logo" src={logo.src} alt="Triton's Logo" />
-    <small>{contact.copyright}</small>
+    <small>© 2026 | Triton</small>
   </div>
 </footer>
 
