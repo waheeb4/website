@@ -9,8 +9,11 @@ export interface Metadata {
     type: string;
   };
 }
-export interface ContactInfo {
-  tag: SvgComponent;
+export interface Link {
   label: string;
   link: string;
+}
+
+export interface ContactLink extends Link {
+  tag: SvgComponent;
 }
