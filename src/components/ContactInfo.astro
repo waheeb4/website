@@ -4,9 +4,9 @@ import Instagram from "../assets/instagram.svg";
 import LinkedIn from "../assets/linkedin.svg";
 import logo from "../assets/logo.png";
 import Mail from "../assets/mail.svg";
-import type { ContactInfo } from "../types";
+import type { ContactLink } from "../types";
 
-const contactInfo: ContactInfo[] = [
+const contactLink: ContactLink[] = [
   { tag: Mail, label: "Email", link: "mailto:triton.rov1@gmail.com" },
   {
     tag: Facebook,
@@ -30,14 +30,14 @@ const contactInfo: ContactInfo[] = [
   <h2 class="contact-title">Contact Us</h2>
   <ul class="contact-links" aria-label="Contact links">
     {
-      contactInfo.map((info) => {
-        const Tag = info.tag;
+      contactLink.map((link) => {
+        const Tag = link.tag;
         return (
           <li>
             <a
               class="contact-link"
-              href={info.link}
-              aria-label={`Triton's ${info.label}`}
+              href={link.link}
+              aria-label={`Triton's ${link.label}`}
             >
               <Tag
                 class="contact-icon"
