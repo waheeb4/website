@@ -1,0 +1,175 @@
+---
+import Facebook from "../assets/facebook.svg";
+import Instagram from "../assets/instagram.svg";
+import LinkedIn from "../assets/linkedin.svg";
+import logo from "../assets/logo.png";
+import Mail from "../assets/mail.svg";
+
+const contact = {
+  email: "mailto:triton.rov1@gmail.com",
+  facebook: "https://www.facebook.com/triton.rov",
+  instagram: "https://www.instagram.com/triton.rov",
+  linkedin: "https://www.linkedin.com/company/triton-rov/",
+  copyright: "© 2026 | Triton",
+};
+---
+
+<footer class="contact">
+  <h2 class="contact-title">Contact Us</h2>
+
+  <ul class="contact-links" aria-label="Contact links">
+    <li>
+      <a class="contact-link" href={contact.email} aria-label="Triton's Email">
+        <Mail class="contact-icon" aria-hidden="true" width="20" height="20" />
+      </a>
+    </li>
+    <li>
+      <a
+        class="contact-link"
+        href={contact.facebook}
+        aria-label="Triton's Facebook"
+      >
+        <Facebook
+          class="contact-icon"
+          aria-hidden="true"
+          width="20"
+          height="20"
+          fill="currentColor"
+        />
+      </a>
+    </li>
+    <li>
+      <a
+        class="contact-link"
+        href={contact.instagram}
+        aria-label="Triton's Instagram"
+      >
+        <Instagram
+          class="contact-icon"
+          aria-hidden="true"
+          width="20"
+          height="20"
+          fill="currentColor"
+        />
+      </a>
+    </li>
+    <li>
+      <a
+        class="contact-link"
+        href={contact.linkedin}
+        aria-label="Triton's LinkedIn"
+      >
+        <LinkedIn
+          class="contact-icon"
+          aria-hidden="true"
+          width="20"
+          height="20"
+          fill="currentColor"
+        />
+      </a>
+    </li>
+  </ul>
+
+  <div class="contact-brand">
+    <img class="contact-logo" src={logo.src} alt="Triton's Logo" />
+    <small>{contact.copyright}</small>
+  </div>
+</footer>
+
+<style>
+  .contact {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    align-items: center;
+    gap: 1rem;
+    background: #223064;
+    padding: 0.3rem 0.3rem 0.3rem;
+  }
+
+  .contact::before {
+    content: "";
+    position: absolute;
+    right: 0;
+    bottom: 100%;
+    left: 0;
+    height: 34rem;
+    background: linear-gradient(
+      to bottom,
+      rgb(34 48 100 / 0) 0%,
+      rgb(34 48 100 / 1%) 6%,
+      rgb(34 48 100 / 2%) 12%,
+      rgb(34 48 100 / 4%) 18%,
+      rgb(34 48 100 / 6%) 24%,
+      rgb(34 48 100 / 9%) 30%,
+      rgb(34 48 100 / 12%) 36%,
+      rgb(34 48 100 / 16%) 42%,
+      rgb(34 48 100 / 21%) 48%,
+      rgb(34 48 100 / 28%) 54%,
+      rgb(34 48 100 / 36%) 60%,
+      rgb(34 48 100 / 45%) 66%,
+      rgb(34 48 100 / 55%) 72%,
+      rgb(34 48 100 / 66%) 78%,
+      rgb(34 48 100 / 78%) 84%,
+      rgb(34 48 100 / 90%) 92%,
+      #223064 100%
+    );
+  }
+
+  .contact-title {
+    padding-left: 1rem;
+    font-family: var(--font-special-gothic-expanded-one), sans-serif;
+    font-size: 1.05rem;
+    letter-spacing: 0.05em;
+    color: #0f9cd8;
+    text-transform: uppercase;
+    line-height: 1;
+    margin: 0;
+  }
+
+  .contact-links {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .contact-link {
+    display: grid;
+    width: 2.75rem;
+    height: 2.75rem;
+    place-items: center;
+    color: #0f9cd8;
+  }
+
+  .contact-icon {
+    transition: transform 250ms ease;
+  }
+
+  .contact-icon:hover,
+  .contact-link:focus-visible {
+    transform: scale(1.2);
+  }
+
+  .contact-brand {
+    display: flex;
+    align-items: end;
+    justify-self: end;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .contact-logo {
+    width: 5.5rem;
+    filter: brightness(0) invert(1);
+  }
+
+  .contact-brand small {
+    color: rgb(254 254 254 / 52%);
+    font-family: sans-serif;
+    font-size: 0.75rem;
+    letter-spacing: 0.05em;
+  }
+</style>

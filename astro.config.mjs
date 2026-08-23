@@ -1,5 +1,12 @@
 // @ts-check
-import { defineConfig } from 'astro/config';
+import { defineConfig, fontProviders } from "astro/config";
 
-// https://astro.build/config
-export default defineConfig({});
+export default defineConfig({
+  fonts: [
+    {
+      name: "Special Gothic Expanded One",
+      cssVariable: "--font-special-gothic-expanded-one",
+      provider: fontProviders.google(),
+    },
+  ],
+});
