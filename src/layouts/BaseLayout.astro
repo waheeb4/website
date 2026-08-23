@@ -1,6 +1,7 @@
 ---
 import { Font } from "astro:assets";
 import BaseHead from "../components/BaseHead.astro";
+import Navigation from "../components/Navigation.astro";
 import ContactInfo from "../components/ContactInfo.astro";
 import "../styles/global.css";
 import type { Metadata } from "../types";
@@ -20,6 +21,7 @@ const { metadata } = Astro.props;
     <BaseHead {metadata} />
   </head>
   <body>
+    <Navigation />
     <main>
       <slot />
     </main>
