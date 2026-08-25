@@ -1,5 +1,6 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
+import Hero from "../components/Hero.astro";
 import type { Metadata } from "../types";
 
 const metadata: Metadata = {
@@ -14,4 +15,6 @@ const metadata: Metadata = {
 };
 ---
 
-<BaseLayout {metadata} />
+<BaseLayout {metadata}>
+  <Hero />
+</BaseLayout>
