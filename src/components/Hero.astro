@@ -1,0 +1,294 @@
+---
+import { Image } from "astro:assets";
+import HeroLogo from "../assets/hero.png";
+
+const Phrase = ["Charting", "the", "Deep", "Frontier"];
+---
+
+<section class="hero-section">
+  <h1 class="hero-title" aria-label="Charting the Deep Frontier">
+    <span class="hero-word" id="zero" aria-hidden="true">{Phrase[0]}</span>
+    <span class="hero-word" id="one" aria-hidden="true">{Phrase[1]}</span>
+    <span class="hero-word" id="two" aria-hidden="true">{Phrase[2]}</span>
+    <span class="hero-word" id="three" aria-hidden="true">{Phrase[3]}</span>
+  </h1>
+
+  <div class="hero-position">
+    <div class="hero-reveal">
+      <Image
+        class="hero"
+        src={HeroLogo}
+        alt="Triton's Shadow Wing remotely operated vehicle"
+        priority
+      />
+    </div>
+  </div>
+
+  <p class="hero-paragraph">
+    <span class="hero-paragraph-text"
+      >built by triton, tested by the ocean.</span
+    >
+    <span class="hero-paragraph-cursor" aria-hidden="true">|</span>
+  </p>
+</section>
+
+<style>
+  .hero-section {
+    --charting-top: 7.5vw;
+    --charting-left: 5.8vw;
+    --charting-size: 8.55vw;
+    --the-top: 5.6vw;
+    --the-left: 68.5vw;
+    --the-size: 5.7vw;
+    --deep-top: 9.5vw;
+    --deep-left: 67vw;
+    --deep-size: 10.45vw;
+    --frontier-top: 37vw;
+    --frontier-left: 28.6vw;
+    --frontier-size: 11.685vw;
+    --rov-top: 5.3vw;
+    --rov-left: 53.3vw;
+    --rov-width: 51.205vw;
+    --rov-rotation: -20deg;
+    --subtitle-top: 47vw;
+    --subtitle-left: 36vw;
+    --subtitle-size: 1.1875vw;
+
+    position: relative;
+    min-block-size: 100svh;
+    overflow: clip;
+    isolation: isolate;
+  }
+
+  .hero-title {
+    position: absolute;
+    z-index: 1;
+    inset: 0;
+    margin: 0;
+    pointer-events: none;
+  }
+
+  .hero-word {
+    position: absolute;
+    display: block;
+    opacity: 0;
+    line-height: 0.82;
+    white-space: nowrap;
+    animation: word-reveal 800ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  #zero {
+    top: var(--charting-top);
+    left: var(--charting-left);
+    color: #192455;
+    font-family: var(--font-plus-jakarta-sans), sans-serif;
+    font-size: var(--charting-size);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    animation-delay: 100ms;
+  }
+
+  #one {
+    top: var(--the-top);
+    left: var(--the-left);
+    color: #4f78dc;
+    font-family: var(--font-cormorant-garamond), serif;
+    font-size: var(--the-size);
+    font-style: italic;
+    font-weight: 600;
+    animation-delay: 200ms;
+  }
+
+  #two {
+    top: var(--deep-top);
+    left: var(--deep-left);
+    color: #2349bb;
+    font-family: var(--font-dm-serif-display), serif;
+    font-size: var(--deep-size);
+    font-style: italic;
+    font-weight: 400;
+    animation-delay: 300ms;
+  }
+
+  #three {
+    top: var(--frontier-top);
+    left: var(--frontier-left);
+    color: #005078;
+    font-family: var(--font-plus-jakarta-sans), sans-serif;
+    font-size: var(--frontier-size);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    animation-delay: 400ms;
+  }
+
+  .hero-position {
+    position: absolute;
+    z-index: 2;
+    top: var(--rov-top);
+    left: var(--rov-left);
+    inline-size: var(--rov-width);
+    transform: translateX(-50%) rotate(var(--rov-rotation));
+  }
+
+  .hero-reveal {
+    animation: rov-reveal 1s cubic-bezier(0.22, 1, 0.36, 1) 150ms both;
+  }
+
+  .hero {
+    display: block;
+    inline-size: 100%;
+    block-size: auto;
+    filter: drop-shadow(0 1.7vw 3vw rgb(0 5 40 / 60%))
+      drop-shadow(0 0.6vw 1.4vw rgb(26 86 219 / 32%));
+    will-change: transform;
+    animation: rov-float 2.8s ease-in-out 1.15s infinite alternate;
+  }
+
+  .hero-paragraph {
+    position: absolute;
+    z-index: 3;
+    top: var(--subtitle-top);
+    left: var(--subtitle-left);
+    margin: 0;
+    color: #6a82b6;
+    font-family: ui-monospace, monospace;
+    font-size: var(--subtitle-size);
+    letter-spacing: 0.04em;
+    text-align: center;
+    transform: translateX(-50%);
+    animation: word-reveal 800ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  .hero-paragraph-text {
+    display: inline-block;
+    inline-size: 0;
+    overflow: hidden;
+    white-space: nowrap;
+    animation: subtitle-type 1.6s steps(37, end) 550ms both;
+  }
+
+  .hero-paragraph-cursor {
+    display: inline-block;
+    opacity: 0;
+    margin-inline-start: 0.08em;
+    color: rgb(13 43 94 / 50%);
+    text-shadow: 0 0 0.5em rgb(26 86 219 / 65%);
+    transform: translateY(-0.35em);
+    animation: subtitle-cursor 1s step-end 550ms infinite;
+  }
+
+  @keyframes word-reveal {
+    from {
+      opacity: 0;
+      transform: translateY(1.5rem);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes rov-reveal {
+    from {
+      opacity: 0;
+      transform: scale(1.06);
+    }
+
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  @keyframes rov-float {
+    from {
+      transform: translateY(0);
+    }
+
+    to {
+      transform: translateY(-0.9rem);
+    }
+  }
+
+  @keyframes subtitle-type {
+    to {
+      inline-size: 39ch;
+    }
+  }
+
+  @keyframes subtitle-cursor {
+    0%,
+    100% {
+      opacity: 1;
+    }
+
+    50% {
+      opacity: 0;
+    }
+  }
+
+  @media (width < 48rem) {
+    .hero-section {
+      display: grid;
+      align-content: center;
+      gap: 2.5rem;
+      min-block-size: 100svh;
+      padding: 6rem 1.25rem 3rem;
+      box-sizing: border-box;
+    }
+
+    .hero-title,
+    .hero-position,
+    .hero-paragraph {
+      position: relative;
+      inset: auto;
+      transform: none;
+    }
+
+    .hero-title {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0 0.18em;
+      text-align: center;
+    }
+
+    .hero-word {
+      position: static;
+      display: inline;
+      font-size: clamp(2.4rem, 13vw, 4.5rem);
+      letter-spacing: -0.06em;
+    }
+
+    #one {
+      font-size: clamp(2.25rem, 11vw, 4rem);
+    }
+
+    .hero-position {
+      justify-self: center;
+      inline-size: min(100%, 38rem);
+      transform: rotate(-10deg);
+    }
+
+    .hero-paragraph {
+      justify-self: center;
+      max-inline-size: 24rem;
+      font-size: 0.8rem;
+    }
+  }
+
+  @media (min-width: 48rem) and (max-width: 64rem) and (orientation: portrait) {
+    .hero-title {
+      transform: translateY(2.5rem);
+    }
+
+    .hero-position {
+      transform: translateX(-50%) translateY(2.5rem) rotate(var(--rov-rotation));
+    }
+
+    .hero-paragraph {
+      top: 52.5vw;
+    }
+  }
+</style>
