@@ -16,6 +16,8 @@ export interface Cards {
   body: string;
   image: ImageMetadata;
   alt: string;
+  imageWidth: number;
+  imageHeight: number;
 }
 
 export interface Link {

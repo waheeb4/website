@@ -11,18 +11,24 @@ export const cards: Cards[] = [
     body: "Founded in 2024 at the Arab Academy for Science, Technology & Maritime Transport (AASTMT), Triton is a student-led engineering team competing in the MATE ROV International Competition. We combine mechanical, electrical, software and non-technical talent to design ROVs that tackle real-world underwater challenges. Every member brings a different discipline to the table united by a shared drive to build something that works under pressure, literally and figuratively.",
     image: Pool,
     alt: "Poolside post mission celebration",
+    imageWidth: 1200,
+    imageHeight: 800,
   },
   {
     title: "Competition",
     body: "MATE ROV Competition is one of the most rigorous student engineering challenges in the world. Teams design, build, and pilot remotely operated vehicles to complete real underwater mission tasks modelled on the work of professional ocean engineers. We compete at the international level, measured not just on technical performance but on documentation, presentation, and professional standards.",
     image: Carry,
     alt: "Members carrying the remotely operated vehicle post mission",
+    imageWidth: 1200,
+    imageHeight: 800,
   },
   {
     title: "How We Work",
     body: "Our team runs as four interconnected divisions: Mechanical, Electrical, Software, and Non-Technical. Each division owns its domain end-to-end from design and fabrication to testing and documentation. We operate on a real project cycle: scoped deliverables, integration reviews, and a shared deadline with a competition to win on the calendar.",
     image: Team,
     alt: "Team photo",
+    imageWidth: 1200,
+    imageHeight: 800,
   },
 ];
 ---
@@ -38,7 +44,14 @@ export const cards: Cards[] = [
         >
           <h2 class="about-card-title">{card.title}</h2>
           <p class="about-card-body">{card.body}</p>
-          <Image class="about-card-img" src={card.image} alt={card.alt} />
+          <Image
+            class="about-card-img"
+            src={card.image}
+            width={card.imageWidth}
+            height={card.imageHeight}
+            fit="cover"
+            alt={card.alt}
+          />
         </article>
       );
     })
