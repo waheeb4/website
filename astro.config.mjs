@@ -12,7 +12,7 @@ export default defineConfig({
       name: "Plus Jakarta Sans",
       cssVariable: "--font-plus-jakarta-sans",
       provider: fontProviders.google(),
-      weights: [800],
+      weights: [400, 800],
       styles: ["normal"],
     },
     {
