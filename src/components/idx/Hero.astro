@@ -1,6 +1,6 @@
 ---
 import { Image } from "astro:assets";
-import HeroLogo from "../assets/hero.png";
+import HeroLogo from "../../assets/hero.png";
 
 const Phrase = ["Charting", "the", "Deep", "Frontier"];
 ---
@@ -228,7 +228,8 @@ const Phrase = ["Charting", "the", "Deep", "Frontier"];
     }
   }
 
-  @media (width < 48rem) {
+  @media (width < 48rem),
+    (min-width: 48rem) and (max-width: 64rem) and (orientation: portrait) {
     .hero-section {
       display: grid;
       align-content: center;
@@ -279,16 +280,8 @@ const Phrase = ["Charting", "the", "Deep", "Frontier"];
   }
 
   @media (min-width: 48rem) and (max-width: 64rem) and (orientation: portrait) {
-    .hero-title {
-      transform: translateY(2.5rem);
-    }
-
-    .hero-position {
-      transform: translateX(-50%) translateY(2.5rem) rotate(var(--rov-rotation));
-    }
-
-    .hero-paragraph {
-      top: 52.5vw;
+    .hero-section {
+      min-block-size: auto;
     }
   }
 </style>

@@ -1,0 +1,438 @@
+---
+import { Image } from "astro:assets";
+import Carry from "../../assets/carry.jpg";
+import Pool from "../../assets/pool.jpg";
+import Team from "../../assets/team.jpeg";
+import type { Cards } from "../../types";
+
+export const cards: Cards[] = [
+  {
+    title: "Who We Are",
+    body: "Founded in 2024 at the Arab Academy for Science, Technology & Maritime Transport (AASTMT), Triton is a student-led engineering team competing in the MATE ROV International Competition. We combine mechanical, electrical, software and non-technical talent to design ROVs that tackle real-world underwater challenges. Every member brings a different discipline to the table united by a shared drive to build something that works under pressure, literally and figuratively.",
+    image: Pool,
+    alt: "Poolside post mission celebration",
+    imageWidth: 1200,
+    imageHeight: 800,
+  },
+  {
+    title: "Competition",
+    body: "MATE ROV Competition is one of the most rigorous student engineering challenges in the world. Teams design, build, and pilot remotely operated vehicles to complete real underwater mission tasks modelled on the work of professional ocean engineers. We compete at the international level, measured not just on technical performance but on documentation, presentation, and professional standards.",
+    image: Carry,
+    alt: "Members carrying the remotely operated vehicle post mission",
+    imageWidth: 1200,
+    imageHeight: 800,
+  },
+  {
+    title: "How We Work",
+    body: "Our team runs as four interconnected divisions: Mechanical, Electrical, Software, and Non-Technical. Each division owns its domain end-to-end from design and fabrication to testing and documentation. We operate on a real project cycle: scoped deliverables, integration reviews, and a shared deadline with a competition to win on the calendar.",
+    image: Team,
+    alt: "Team photo",
+    imageWidth: 1200,
+    imageHeight: 800,
+  },
+];
+---
+
+<section class="about-section" aria-label="About Triton">
+  {
+    cards.map((card, index) => {
+      return (
+        <article
+          class={`about-card ${index === 0 ? "active" : "stacked"}`}
+          data-card={index}
+          style={`--card-z: ${cards.length - index};`}
+        >
+          <h2 class="about-card-title">{card.title}</h2>
+          <p class="about-card-body">{card.body}</p>
+          <Image
+            class="about-card-img"
+            src={card.image}
+            width={card.imageWidth}
+            height={card.imageHeight}
+            fit="cover"
+            alt={card.alt}
+          />
+        </article>
+      );
+    })
+  }
+  <div class="about-card-controls">
+    <button id="next" type="button" aria-label="Show next About card"
+      ><span aria-hidden="true">→</span></button
+    >
+    <button id="prev" type="button" aria-label="Show previous About card"
+      ><span aria-hidden="true">←</span></button
+    >
+  </div>
+  <script>
+    const cardElements = document.querySelectorAll("[data-card]");
+    const nextButton = document.querySelector<HTMLButtonElement>("#next");
+    const prevButton = document.querySelector<HTMLButtonElement>("#prev");
+    let currentIndex = 0;
+    let isAnimating = false;
+
+    const updateControls = () => {
+      if (nextButton && prevButton) {
+        nextButton.disabled =
+          isAnimating || currentIndex === cardElements.length - 1;
+        prevButton.disabled = isAnimating || currentIndex === 0;
+      }
+    };
+
+    const renderCards = () => {
+      cardElements.forEach((card, cardIndex) => {
+        card.classList.remove("leaving", "entering", "arriving");
+        card.classList.toggle("active", currentIndex === cardIndex);
+        card.classList.toggle("stacked", currentIndex < cardIndex);
+        card.classList.toggle("past", currentIndex > cardIndex);
+      });
+      updateControls();
+    };
+
+    const afterImageTransition = (card: Element, onComplete: () => void) => {
+      const image = card.querySelector<HTMLElement>(".about-card-img");
+
+      if (!image) {
+        onComplete();
+        return;
+      }
+
+      let completed = false;
+      const complete = () => {
+        if (completed) return;
+
+        completed = true;
+        window.clearTimeout(fallback);
+        image.removeEventListener("transitionend", onTransitionEnd);
+        onComplete();
+      };
+
+      const onTransitionEnd = (event: TransitionEvent) => {
+        if (event.target === image && event.propertyName === "transform")
+          complete();
+      };
+
+      const fallback = window.setTimeout(complete, 550);
+      image.addEventListener("transitionend", onTransitionEnd);
+    };
+
+    const goNext = () => {
+      if (isAnimating || currentIndex === cardElements.length - 1) return;
+
+      isAnimating = true;
+      updateControls();
+
+      const outgoingCard = cardElements[currentIndex]!;
+      afterImageTransition(outgoingCard, () => {
+        currentIndex++;
+        isAnimating = false;
+        renderCards();
+      });
+      outgoingCard.classList.add("leaving");
+    };
+
+    const goPrevious = () => {
+      if (isAnimating || currentIndex === 0) return;
+
+      isAnimating = true;
+      updateControls();
+
+      const incomingCard = cardElements[currentIndex - 1]!;
+      incomingCard.classList.remove("past");
+      incomingCard.classList.add("entering");
+
+      afterImageTransition(incomingCard, () => {
+        currentIndex--;
+        isAnimating = false;
+        renderCards();
+      });
+
+      window.requestAnimationFrame(() => {
+        incomingCard.classList.add("arriving");
+      });
+    };
+
+    nextButton?.addEventListener("click", goNext);
+    prevButton?.addEventListener("click", goPrevious);
+
+    renderCards();
+  </script>
+</section>
+
+<style>
+  .about-section {
+    --about-image-left: 45%;
+    --about-image-width: 52vw;
+    --about-image-height: 65vh;
+    --about-image-radius: 20px;
+
+    position: relative;
+    min-height: 100svh;
+    overflow: hidden;
+  }
+
+  .about-card {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    grid-template-columns: 42% 58%;
+    grid-template-rows: auto auto;
+    align-content: center;
+    pointer-events: none;
+  }
+
+  .about-card-title,
+  .about-card-body {
+    grid-column: 1;
+    margin-inline: 19% 10%;
+    color: #192455;
+    opacity: 0;
+    transform: translateY(1rem);
+    transition:
+      opacity 250ms ease,
+      transform 250ms ease;
+  }
+
+  .about-card-title {
+    grid-row: 1;
+    margin-block: 0 24px;
+    color: #0f9cd8;
+    font-family: var(--font-special-gothic-expanded-one), sans-serif;
+    font-size: clamp(2rem, 3vw, 4rem);
+    letter-spacing: 0.02em;
+    line-height: 1.05;
+    text-transform: uppercase;
+  }
+
+  .about-card-body {
+    grid-row: 2;
+    margin-block: 0;
+    font-family: var(--font-plus-jakarta-sans), sans-serif;
+    font-size: clamp(13px, 1.4vw, 20px);
+    font-weight: 400;
+    line-height: 1.7;
+  }
+
+  .about-card-img {
+    position: absolute;
+    top: 50%;
+    left: var(--about-image-left);
+    width: var(--about-image-width);
+    height: var(--about-image-height);
+    border-radius: var(--about-image-radius);
+    object-fit: cover;
+    opacity: 1;
+    transform: translateY(-50%);
+    transition:
+      transform 500ms ease-in-out,
+      opacity 500ms ease-in-out;
+  }
+
+  .about-card.active {
+    z-index: 3;
+  }
+
+  .about-card.active .about-card-title,
+  .about-card.active .about-card-body {
+    opacity: 1;
+    transform: translateY(0);
+    transition-delay: 150ms;
+  }
+
+  .about-card.stacked {
+    z-index: var(--card-z);
+  }
+
+  .about-card.past {
+    z-index: 1;
+  }
+
+  .about-card.past .about-card-img {
+    opacity: 0;
+    transform: translate(120vw, -50%);
+  }
+
+  .about-card.leaving,
+  .about-card.entering {
+    z-index: 4;
+  }
+
+  .about-card.leaving .about-card-title,
+  .about-card.leaving .about-card-body {
+    opacity: 0;
+    transform: translateY(-1rem);
+    transition-delay: 0ms;
+  }
+
+  .about-card.leaving .about-card-img {
+    opacity: 0;
+    transform: translate(120vw, -50%);
+  }
+
+  .about-card.entering .about-card-img {
+    opacity: 1;
+    transform: translate(120vw, -50%);
+  }
+
+  .about-card.entering.arriving .about-card-img {
+    transform: translateY(-50%);
+  }
+
+  .about-card-controls {
+    position: absolute;
+    top: 50%;
+    z-index: 10;
+    width: var(--about-image-width);
+    height: var(--about-image-height);
+    overflow: hidden;
+    border-radius: var(--about-image-radius);
+    pointer-events: none;
+    transform: translateY(-50%);
+    left: var(--about-image-left);
+  }
+
+  #next,
+  #prev {
+    position: absolute;
+    top: 0;
+    display: grid;
+    width: max(44px, 10%);
+    height: 100%;
+    place-items: center;
+    overflow: hidden;
+    border: 0;
+    background: transparent;
+    color: #fff;
+    cursor: pointer;
+    font-size: 1.75rem;
+    line-height: 1;
+    pointer-events: auto;
+  }
+
+  #prev {
+    left: 0;
+    border-radius: var(--about-image-radius) 0 0 var(--about-image-radius);
+  }
+
+  #next {
+    right: 0;
+    border-radius: 0 var(--about-image-radius) var(--about-image-radius) 0;
+  }
+
+  #next::before,
+  #prev::before {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 42px;
+    height: 42px;
+    border: 2px solid rgb(255 255 255 / 95%);
+    border-radius: 50%;
+    background: rgb(15 156 216 / 85%);
+    content: "";
+    transform: translate(-50%, -50%);
+    transition: transform 450ms cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  #next span,
+  #prev span {
+    position: relative;
+    z-index: 1;
+  }
+
+  #next:hover::before,
+  #next:focus-visible::before,
+  #prev:hover::before,
+  #prev:focus-visible::before {
+    transform: translate(-50%, -50%) scale(22);
+  }
+
+  #next:disabled,
+  #prev:disabled {
+    cursor: default;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  @media (max-width: 64rem) {
+    .about-section {
+      --about-image-left: 50%;
+      --about-image-width: min(78vw, 420px);
+      --about-image-height: min(58.5vw, 315px);
+
+      min-height: 0;
+      overflow-x: clip;
+      overflow-y: visible;
+      padding: 6rem 0 3rem;
+    }
+
+    .about-card {
+      grid-template-columns: 1fr;
+      grid-template-rows: auto auto auto;
+      align-content: start;
+    }
+
+    .about-card.active {
+      position: relative;
+      inset: auto;
+    }
+
+    .about-card.stacked,
+    .about-card.past,
+    .about-card.entering {
+      inset: 6rem 0 auto;
+      height: var(--about-image-height);
+    }
+
+    .about-card-title,
+    .about-card-body {
+      grid-column: 1;
+      margin-inline: 7%;
+    }
+
+    .about-card-title {
+      grid-row: 2;
+      margin-block: 2.25rem 1rem;
+      font-size: clamp(1.625rem, 8vw, 2.75rem);
+    }
+
+    .about-card-body {
+      grid-row: 3;
+      font-size: clamp(0.875rem, 4vw, 1.125rem);
+    }
+
+    .about-card-img {
+      position: relative;
+      top: auto;
+      left: auto;
+      grid-column: 1;
+      grid-row: 1;
+      justify-self: center;
+      transform: none;
+    }
+
+    .about-card.past .about-card-img,
+    .about-card.leaving .about-card-img {
+      transform: translateX(120vw);
+    }
+
+    .about-card.entering .about-card-img {
+      transform: translateX(120vw);
+    }
+
+    .about-card.entering.arriving .about-card-img {
+      transform: none;
+    }
+
+    .about-card-controls {
+      top: 6rem;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    #next,
+    #prev {
+      width: max(44px, 15%);
+    }
+  }
+</style>
