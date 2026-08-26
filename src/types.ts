@@ -1,4 +1,5 @@
 import type { SvgComponent } from "astro/types";
+import type { ImageMetadata } from "astro";
 
 export interface Metadata {
   title: string;
@@ -9,6 +10,14 @@ export interface Metadata {
     type: string;
   };
 }
+
+export interface Cards {
+  title: string;
+        body: string;
+        image: ImageMetadata;
+        alt: string;
+}
+
 export interface Link {
   label: string;
   link: string;
