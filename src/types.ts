@@ -13,9 +13,9 @@ export interface Metadata {
 
 export interface Cards {
   title: string;
-        body: string;
-        image: ImageMetadata;
-        alt: string;
+  body: string;
+  image: ImageMetadata;
+  alt: string;
 }
 
 export interface Link {
