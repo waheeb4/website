@@ -65,97 +65,99 @@ export const cards: Cards[] = [
     >
   </div>
   <script>
-    const cardElements = document.querySelectorAll("[data-card]");
-    const nextButton = document.querySelector<HTMLButtonElement>("#next");
-    const prevButton = document.querySelector<HTMLButtonElement>("#prev");
-    let currentIndex = 0;
-    let isAnimating = false;
+    document.addEventListener("astro:page-load", () => {
+      const cardElements = document.querySelectorAll("[data-card]");
+      const nextButton = document.querySelector<HTMLButtonElement>("#next");
+      const prevButton = document.querySelector<HTMLButtonElement>("#prev");
+      let currentIndex = 0;
+      let isAnimating = false;
 
-    const updateControls = () => {
-      if (nextButton && prevButton) {
-        nextButton.disabled =
-          isAnimating || currentIndex === cardElements.length - 1;
-        prevButton.disabled = isAnimating || currentIndex === 0;
-      }
-    };
-
-    const renderCards = () => {
-      cardElements.forEach((card, cardIndex) => {
-        card.classList.remove("leaving", "entering", "arriving");
-        card.classList.toggle("active", currentIndex === cardIndex);
-        card.classList.toggle("stacked", currentIndex < cardIndex);
-        card.classList.toggle("past", currentIndex > cardIndex);
-      });
-      updateControls();
-    };
-
-    const afterImageTransition = (card: Element, onComplete: () => void) => {
-      const image = card.querySelector<HTMLElement>(".about-card-img");
-
-      if (!image) {
-        onComplete();
-        return;
-      }
-
-      let completed = false;
-      const complete = () => {
-        if (completed) return;
-
-        completed = true;
-        window.clearTimeout(fallback);
-        image.removeEventListener("transitionend", onTransitionEnd);
-        onComplete();
+      const updateControls = () => {
+        if (nextButton && prevButton) {
+          nextButton.disabled =
+            isAnimating || currentIndex === cardElements.length - 1;
+          prevButton.disabled = isAnimating || currentIndex === 0;
+        }
       };
 
-      const onTransitionEnd = (event: TransitionEvent) => {
-        if (event.target === image && event.propertyName === "transform")
-          complete();
+      const renderCards = () => {
+        cardElements.forEach((card, cardIndex) => {
+          card.classList.remove("leaving", "entering", "arriving");
+          card.classList.toggle("active", currentIndex === cardIndex);
+          card.classList.toggle("stacked", currentIndex < cardIndex);
+          card.classList.toggle("past", currentIndex > cardIndex);
+        });
+        updateControls();
       };
 
-      const fallback = window.setTimeout(complete, 550);
-      image.addEventListener("transitionend", onTransitionEnd);
-    };
+      const afterImageTransition = (card: Element, onComplete: () => void) => {
+        const image = card.querySelector<HTMLElement>(".about-card-img");
 
-    const goNext = () => {
-      if (isAnimating || currentIndex === cardElements.length - 1) return;
+        if (!image) {
+          onComplete();
+          return;
+        }
 
-      isAnimating = true;
-      updateControls();
+        let completed = false;
+        const complete = () => {
+          if (completed) return;
 
-      const outgoingCard = cardElements[currentIndex]!;
-      afterImageTransition(outgoingCard, () => {
-        currentIndex++;
-        isAnimating = false;
-        renderCards();
-      });
-      outgoingCard.classList.add("leaving");
-    };
+          completed = true;
+          window.clearTimeout(fallback);
+          image.removeEventListener("transitionend", onTransitionEnd);
+          onComplete();
+        };
 
-    const goPrevious = () => {
-      if (isAnimating || currentIndex === 0) return;
+        const onTransitionEnd = (event: TransitionEvent) => {
+          if (event.target === image && event.propertyName === "transform")
+            complete();
+        };
 
-      isAnimating = true;
-      updateControls();
+        const fallback = window.setTimeout(complete, 550);
+        image.addEventListener("transitionend", onTransitionEnd);
+      };
 
-      const incomingCard = cardElements[currentIndex - 1]!;
-      incomingCard.classList.remove("past");
-      incomingCard.classList.add("entering");
+      const goNext = () => {
+        if (isAnimating || currentIndex === cardElements.length - 1) return;
 
-      afterImageTransition(incomingCard, () => {
-        currentIndex--;
-        isAnimating = false;
-        renderCards();
-      });
+        isAnimating = true;
+        updateControls();
 
-      window.requestAnimationFrame(() => {
-        incomingCard.classList.add("arriving");
-      });
-    };
+        const outgoingCard = cardElements[currentIndex]!;
+        afterImageTransition(outgoingCard, () => {
+          currentIndex++;
+          isAnimating = false;
+          renderCards();
+        });
+        outgoingCard.classList.add("leaving");
+      };
 
-    nextButton?.addEventListener("click", goNext);
-    prevButton?.addEventListener("click", goPrevious);
+      const goPrevious = () => {
+        if (isAnimating || currentIndex === 0) return;
 
-    renderCards();
+        isAnimating = true;
+        updateControls();
+
+        const incomingCard = cardElements[currentIndex - 1]!;
+        incomingCard.classList.remove("past");
+        incomingCard.classList.add("entering");
+
+        afterImageTransition(incomingCard, () => {
+          currentIndex--;
+          isAnimating = false;
+          renderCards();
+        });
+
+        window.requestAnimationFrame(() => {
+          incomingCard.classList.add("arriving");
+        });
+      };
+
+      nextButton?.addEventListener("click", goNext);
+      prevButton?.addEventListener("click", goPrevious);
+
+      renderCards();
+    });
   </script>
 </section>
 

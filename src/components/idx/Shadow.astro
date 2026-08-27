@@ -62,100 +62,103 @@ const videoContent: VideoContent[] = [
 </section>
 
 <script>
-  const sections = document.querySelectorAll<HTMLElement>(
-    "[data-shadow-section]",
-  );
-  const frameInterval = 1 / 8;
-  const inertia = 0.035;
-
-  sections.forEach((section) => {
-    const video = section.querySelector<HTMLVideoElement>(
-      "[data-shadow-video]",
+  document.addEventListener("astro:page-load", () => {
+    const sections = document.querySelectorAll<HTMLElement>(
+      "[data-shadow-section]",
     );
-    const panels = [
-      ...section.querySelectorAll<HTMLElement>("[data-shadow-panel]"),
-    ];
-    if (!video) return;
+    const frameInterval = 1 / 8;
+    const inertia = 0.035;
 
-    let duration = 0;
-    let frameId = 0;
-    let settleFrameId = 0;
-    let targetTime = 0;
-    let renderedTime = 0;
-
-    const updatePanels = (time: number) => {
-      panels.forEach((panel) => {
-        const start = Number(panel.dataset.start);
-        const end = Number(panel.dataset.end);
-        panel.classList.toggle("is-active", time >= start && time <= end);
-      });
-    };
-
-    const renderAt = (time: number) => {
-      const frameTime = Math.min(
-        Math.round(time / frameInterval) * frameInterval,
-        duration,
+    sections.forEach((section) => {
+      const video = section.querySelector<HTMLVideoElement>(
+        "[data-shadow-video]",
       );
-      updatePanels(time);
+      const panels = [
+        ...section.querySelectorAll<HTMLElement>("[data-shadow-panel]"),
+      ];
+      if (!video) return;
 
-      if (Math.abs(video.currentTime - frameTime) >= frameInterval / 2) {
-        video.currentTime = frameTime;
-      }
-    };
+      let duration = 0;
+      let frameId = 0;
+      let settleFrameId = 0;
+      let targetTime = 0;
+      let renderedTime = 0;
 
-    const settle = () => {
-      settleFrameId = 0;
+      const updatePanels = (time: number) => {
+        panels.forEach((panel) => {
+          const start = Number(panel.dataset.start);
+          const end = Number(panel.dataset.end);
+          panel.classList.toggle("is-active", time >= start && time <= end);
+        });
+      };
 
-      const difference = targetTime - renderedTime;
-      renderedTime =
-        Math.abs(difference) < 0.01
-          ? targetTime
-          : renderedTime + difference * inertia;
-      renderAt(renderedTime);
+      const renderAt = (time: number) => {
+        const frameTime = Math.min(
+          Math.round(time / frameInterval) * frameInterval,
+          duration,
+        );
+        updatePanels(time);
 
-      if (Math.abs(targetTime - renderedTime) >= 0.01) {
-        settleFrameId = window.requestAnimationFrame(settle);
-      }
-    };
+        if (Math.abs(video.currentTime - frameTime) >= frameInterval / 2) {
+          video.currentTime = frameTime;
+        }
+      };
 
-    const scheduleSettling = () => {
-      if (!settleFrameId) settleFrameId = window.requestAnimationFrame(settle);
-    };
+      const settle = () => {
+        settleFrameId = 0;
 
-    const update = () => {
-      frameId = 0;
-      if (!duration) return;
+        const difference = targetTime - renderedTime;
+        renderedTime =
+          Math.abs(difference) < 0.01
+            ? targetTime
+            : renderedTime + difference * inertia;
+        renderAt(renderedTime);
 
-      const rect = section.getBoundingClientRect();
-      const scrollable = section.offsetHeight - window.innerHeight;
-      const progress = Math.max(0, Math.min(1, -rect.top / scrollable));
-      targetTime = progress * duration;
-      scheduleSettling();
-    };
+        if (Math.abs(targetTime - renderedTime) >= 0.01) {
+          settleFrameId = window.requestAnimationFrame(settle);
+        }
+      };
 
-    const scheduleUpdate = () => {
-      if (!frameId) frameId = window.requestAnimationFrame(update);
-    };
+      const scheduleSettling = () => {
+        if (!settleFrameId)
+          settleFrameId = window.requestAnimationFrame(settle);
+      };
 
-    video.addEventListener("loadedmetadata", () => {
-      duration = video.duration;
-      renderedTime = video.currentTime;
-      scheduleUpdate();
+      const update = () => {
+        frameId = 0;
+        if (!duration) return;
+
+        const rect = section.getBoundingClientRect();
+        const scrollable = section.offsetHeight - window.innerHeight;
+        const progress = Math.max(0, Math.min(1, -rect.top / scrollable));
+        targetTime = progress * duration;
+        scheduleSettling();
+      };
+
+      const scheduleUpdate = () => {
+        if (!frameId) frameId = window.requestAnimationFrame(update);
+      };
+
+      video.addEventListener("loadedmetadata", () => {
+        duration = video.duration;
+        renderedTime = video.currentTime;
+        scheduleUpdate();
+      });
+      video.addEventListener(
+        "canplay",
+        () => {
+          void video
+            .play()
+            .then(() => video.pause())
+            .catch(() => undefined);
+        },
+        { once: true },
+      );
+
+      window.addEventListener("scroll", scheduleUpdate, { passive: true });
+      window.addEventListener("resize", scheduleUpdate);
+      video.load();
     });
-    video.addEventListener(
-      "canplay",
-      () => {
-        void video
-          .play()
-          .then(() => video.pause())
-          .catch(() => undefined);
-      },
-      { once: true },
-    );
-
-    window.addEventListener("scroll", scheduleUpdate, { passive: true });
-    window.addEventListener("resize", scheduleUpdate);
-    video.load();
   });
 </script>
 
