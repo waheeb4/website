@@ -11,13 +11,20 @@ export interface Metadata {
   };
 }
 
-export interface Cards {
+export interface Content {
   title: string;
   body: string;
+}
+
+export interface Cards extends Content {
   image: ImageMetadata;
   alt: string;
   imageWidth: number;
   imageHeight: number;
+}
+
+export interface Achievements extends Content {
+  international: string;
 }
 
 export interface Link {

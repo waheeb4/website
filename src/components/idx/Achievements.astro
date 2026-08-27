@@ -1,0 +1,290 @@
+---
+import { Image } from "astro:assets";
+import DSC01096 from "../../assets/achievements/DSC01096.jpeg";
+import DSC02345 from "../../assets/achievements/DSC02345.jpeg";
+import DSC03845 from "../../assets/achievements/DSC03845.jpg";
+import DSC04383 from "../../assets/achievements/DSC04383.jpeg";
+import DSC04387 from "../../assets/achievements/DSC04387.jpeg";
+import DSC04401 from "../../assets/achievements/DSC04401.jpeg";
+import DSC05900 from "../../assets/achievements/DSC05900.jpg";
+import DSC09264 from "../../assets/achievements/DSC09264.jpeg";
+import DSC09845 from "../../assets/achievements/DSC09845.jpeg";
+import IMG0635 from "../../assets/achievements/IMG_0635.jpg";
+import IMG0639 from "../../assets/achievements/IMG_0639.jpg";
+import IMG1530 from "../../assets/achievements/IMG_1530.jpg";
+import IMG1542 from "../../assets/achievements/IMG_1542.jpg";
+import type { Achievements } from "../../types";
+
+const achievements: Achievements[] = [
+  {
+    title: "MATE 2026",
+    body: "1st Place AAST · Best ROV Design · Best Technical Report · Best Engineering Presentation · Best Team Spirit",
+    international:
+      "3rd Place International Competition, Canada · Highest Ranked Egyptian Team · Best Technical Report · Best Engineering Presentation",
+  },
+  {
+    title: "MATE 2025",
+    body: "1st Place AAST · Best Engineering Presentation",
+    international:
+      "4th Place International Competition, USA · Highest Ranked Egyptian Team",
+  },
+];
+
+const leftPhotos = [
+  DSC05900,
+  DSC04383,
+  IMG0635,
+  DSC09264,
+  DSC09845,
+  DSC03845,
+  IMG1530,
+];
+
+const rightPhotos = [DSC04387, DSC04401, IMG0639, DSC01096, DSC02345, IMG1542];
+---
+
+<section class="achievements-section" aria-labelledby="achievements-heading">
+  <div class="photo-band photo-band--left" aria-hidden="true">
+    <div class="photo-belt photo-belt--up">
+      {
+        [...leftPhotos, ...leftPhotos].map((photo) => (
+          <div class="photo-card">
+            <Image
+              class="photo-card-image"
+              src={photo}
+              width={640}
+              height={480}
+              fit="cover"
+              alt=""
+            />
+          </div>
+        ))
+      }
+    </div>
+  </div>
+
+  <div class="center-content">
+    <h2 class="achievements-title" id="achievements-heading">Achievements</h2>
+
+    {
+      achievements.map((achievement) => (
+        <article class="achievement">
+          <h3 class="achievement-title">{achievement.title}</h3>
+          <p class="achievement-body">{achievement.body}</p>
+          <p class="achievement-int">{achievement.international}</p>
+        </article>
+      ))
+    }
+  </div>
+
+  <div class="photo-band photo-band--right" aria-hidden="true">
+    <div class="photo-belt photo-belt--down">
+      {
+        [...rightPhotos, ...rightPhotos].map((photo) => (
+          <div class="photo-card">
+            <Image
+              class="photo-card-image"
+              src={photo}
+              width={640}
+              height={480}
+              fit="cover"
+              alt=""
+            />
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  .achievements-section {
+    position: relative;
+    isolation: isolate;
+    display: flex;
+    width: 100%;
+    height: 100svh;
+    min-height: 0;
+    overflow: hidden;
+    padding: 10vh 0 0;
+    box-sizing: border-box;
+  }
+
+  .photo-band {
+    flex: 0 0 22vw;
+    width: 22vw;
+    min-block-size: 0;
+    overflow: hidden;
+    padding-inline: 1vw;
+    -webkit-mask-image: linear-gradient(
+      to bottom,
+      transparent 0%,
+      black 18%,
+      black 82%,
+      transparent 100%
+    );
+    mask-image: linear-gradient(
+      to bottom,
+      transparent 0%,
+      black 18%,
+      black 82%,
+      transparent 100%
+    );
+  }
+
+  .photo-belt {
+    display: flex;
+    flex-direction: column;
+    will-change: transform;
+  }
+
+  @keyframes scroll-up {
+    from {
+      transform: translateY(0);
+    }
+
+    to {
+      transform: translateY(-50%);
+    }
+  }
+
+  @keyframes scroll-down {
+    from {
+      transform: translateY(-50%);
+    }
+
+    to {
+      transform: translateY(0);
+    }
+  }
+
+  .photo-belt--up {
+    animation: scroll-up 38s linear infinite;
+  }
+
+  .photo-belt--down {
+    animation: scroll-down 32s linear infinite;
+  }
+
+  .photo-card {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    flex-shrink: 0;
+    overflow: hidden;
+    margin-bottom: 1.4vw;
+    border-radius: 16px;
+    box-shadow: 0 6px 28px rgb(25 36 85 / 14%);
+  }
+
+  .photo-card-image {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .center-content {
+    position: relative;
+    z-index: 1;
+    flex: 1 1 auto;
+    min-inline-size: 0;
+    min-block-size: 0;
+    container-type: inline-size;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding-inline: 3vw;
+    text-align: center;
+  }
+
+  .achievements-title {
+    margin: 0 0 5vh;
+    color: #0f9cd8;
+    font-family: var(--font-special-gothic-expanded-one), sans-serif;
+    font-size: clamp(1.25rem, 9.6cqi, 5.5rem);
+    font-weight: 400;
+    letter-spacing: 0.08em;
+    line-height: 1;
+    text-transform: uppercase;
+  }
+
+  .achievement {
+    margin-bottom: 4vh;
+  }
+
+  .achievement:last-child {
+    margin-bottom: 0;
+  }
+
+  .achievement-title {
+    margin: 0 0 1vh;
+    color: #0f9cd8;
+    font-family: var(--font-plus-jakarta-sans), sans-serif;
+    font-size: clamp(0.8125rem, 1.3vw, 1.1875rem);
+    font-weight: 800;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+  }
+
+  .achievement-body {
+    margin: 0 0 0.6vh;
+    color: #192455;
+    font-family: var(--font-plus-jakarta-sans), sans-serif;
+    font-size: clamp(0.9375rem, 1.6vw, 1.4375rem);
+    font-weight: 400;
+    line-height: 1.9;
+  }
+
+  .achievement-int {
+    margin: 0.5vh 0 0;
+    color: #0f9cd8;
+    font-family: var(--font-plus-jakarta-sans), sans-serif;
+    font-size: clamp(1.0625rem, 2vw, 1.75rem);
+    font-weight: 800;
+    line-height: 1.35;
+  }
+
+  @media (max-width: 48rem) {
+    .achievements-section {
+      height: auto;
+      min-height: 100svh;
+      overflow: visible;
+      overflow-x: clip;
+      padding: 80px 0 60px;
+    }
+
+    .photo-band--right {
+      display: none;
+    }
+
+    .photo-band {
+      flex-basis: 28vw;
+      height: 58vh;
+      min-block-size: auto;
+      align-self: center;
+    }
+
+    .center-content {
+      padding-inline: 5vw;
+    }
+
+    .achievements-title {
+      margin-bottom: 3vh;
+    }
+
+    .achievement {
+      margin-bottom: 3vh;
+    }
+
+    .achievement-body {
+      font-size: clamp(0.8125rem, 3.5vw, 1.0625rem);
+      line-height: 1.7;
+    }
+
+    .achievement-int {
+      font-size: clamp(0.9375rem, 4vw, 1.25rem);
+    }
+  }
+</style>
