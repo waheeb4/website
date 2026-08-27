@@ -40,6 +40,8 @@ body {
   flex-direction: column;
 }
 
+html { overflow-y: scroll; }
+
 main {
   flex: 1;
 }
