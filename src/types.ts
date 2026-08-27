@@ -27,6 +27,11 @@ export interface Achievements extends Content {
   international: string;
 }
 
+export interface VideoContent extends Content {
+  start: number;
+  end: number;
+}
+
 export interface Link {
   label: string;
   link: string;

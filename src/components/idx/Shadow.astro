@@ -1,0 +1,299 @@
+---
+import shadowVideoUrl from "../../assets/output.mp4?url";
+import type { VideoContent } from "../../types";
+
+const videoContent: VideoContent[] = [
+  {
+    title: "Gripper System",
+    start: 5.95,
+    end: 10,
+    body: "Dual-claw gripper with servo-driven actuation. The left gripper rotates 360 degrees, while the right opens to an extreme wide angle for precise object manipulation at depth.",
+  },
+  {
+    title: "Thruster Configuration",
+    start: 15.3,
+    end: 17.5,
+    body: "A custom six-degree-of-freedom thruster arrangement enables full holonomic movement across every axis.",
+  },
+  {
+    title: "Internal PCBs",
+    start: 23,
+    end: 28,
+    body: "Three custom PCBs isolate heavy-duty components: a power board for voltage conversion and distribution, an ESC board for motor speed control, and a control board for the main processor and flight controller.",
+  },
+];
+---
+
+<section
+  class="shadow-section"
+  data-shadow-section
+  aria-labelledby="shadow-heading"
+>
+  <div class="shadow-stage">
+    <p class="scroll-hint">Scroll to see Shadow Wing&apos;s capabilities</p>
+
+    <video
+      class="scroll-video"
+      data-shadow-video
+      src={shadowVideoUrl}
+      muted
+      playsinline
+      preload="auto"
+      aria-label="Shadow Wing remotely operated vehicle capability animation"
+    ></video>
+
+    <div class="shadow-copy" aria-live="polite">
+      <h2 class="scroll-title" id="shadow-heading">Shadow Wing</h2>
+      {
+        videoContent.map((content) => (
+          <article
+            class="content-panel"
+            data-shadow-panel
+            data-start={content.start}
+            data-end={content.end}
+          >
+            <h3 class="content-title">{content.title}</h3>
+            <p class="content-body">{content.body}</p>
+          </article>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<script>
+  const sections = document.querySelectorAll<HTMLElement>(
+    "[data-shadow-section]",
+  );
+  const frameInterval = 1 / 8;
+  const inertia = 0.035;
+
+  sections.forEach((section) => {
+    const video = section.querySelector<HTMLVideoElement>(
+      "[data-shadow-video]",
+    );
+    const panels = [
+      ...section.querySelectorAll<HTMLElement>("[data-shadow-panel]"),
+    ];
+    if (!video) return;
+
+    let duration = 0;
+    let frameId = 0;
+    let settleFrameId = 0;
+    let targetTime = 0;
+    let renderedTime = 0;
+
+    const updatePanels = (time: number) => {
+      panels.forEach((panel) => {
+        const start = Number(panel.dataset.start);
+        const end = Number(panel.dataset.end);
+        panel.classList.toggle("is-active", time >= start && time <= end);
+      });
+    };
+
+    const renderAt = (time: number) => {
+      const frameTime = Math.min(
+        Math.round(time / frameInterval) * frameInterval,
+        duration,
+      );
+      updatePanels(time);
+
+      if (Math.abs(video.currentTime - frameTime) >= frameInterval / 2) {
+        video.currentTime = frameTime;
+      }
+    };
+
+    const settle = () => {
+      settleFrameId = 0;
+
+      const difference = targetTime - renderedTime;
+      renderedTime =
+        Math.abs(difference) < 0.01
+          ? targetTime
+          : renderedTime + difference * inertia;
+      renderAt(renderedTime);
+
+      if (Math.abs(targetTime - renderedTime) >= 0.01) {
+        settleFrameId = window.requestAnimationFrame(settle);
+      }
+    };
+
+    const scheduleSettling = () => {
+      if (!settleFrameId) settleFrameId = window.requestAnimationFrame(settle);
+    };
+
+    const update = () => {
+      frameId = 0;
+      if (!duration) return;
+
+      const rect = section.getBoundingClientRect();
+      const scrollable = section.offsetHeight - window.innerHeight;
+      const progress = Math.max(0, Math.min(1, -rect.top / scrollable));
+      targetTime = progress * duration;
+      scheduleSettling();
+    };
+
+    const scheduleUpdate = () => {
+      if (!frameId) frameId = window.requestAnimationFrame(update);
+    };
+
+    video.addEventListener("loadedmetadata", () => {
+      duration = video.duration;
+      renderedTime = video.currentTime;
+      scheduleUpdate();
+    });
+    video.addEventListener(
+      "canplay",
+      () => {
+        void video
+          .play()
+          .then(() => video.pause())
+          .catch(() => undefined);
+      },
+      { once: true },
+    );
+
+    window.addEventListener("scroll", scheduleUpdate, { passive: true });
+    window.addEventListener("resize", scheduleUpdate);
+    video.load();
+  });
+</script>
+
+<style>
+  .shadow-section {
+    height: 550vh;
+    margin-top: 7.5rem;
+    position: relative;
+  }
+
+  .shadow-stage {
+    align-content: center;
+    column-gap: 4%;
+    display: grid;
+    grid-template-areas:
+      "hint copy"
+      "video copy";
+    grid-template-columns: minmax(0, 1.1fr) minmax(20rem, 0.9fr);
+    grid-template-rows: auto auto;
+    height: 100svh;
+    margin: 0 auto;
+    position: sticky;
+    top: 0;
+    width: min(90%, 120rem);
+  }
+
+  .scroll-hint {
+    align-self: end;
+    color: rgb(25 36 85 / 65%);
+    font-family: var(--font-plus-jakarta-sans), sans-serif;
+    font-size: 0.6875rem;
+    font-weight: 500;
+    grid-area: hint;
+    letter-spacing: 0.12em;
+    margin: 0 0 0.5rem;
+    text-align: center;
+    text-transform: uppercase;
+  }
+
+  .scroll-video {
+    aspect-ratio: 16 / 9;
+    border: 1.5px solid rgb(15 156 216 / 45%);
+    border-radius: 1.25rem;
+    box-shadow:
+      0 0 2rem rgb(15 156 216 / 12%),
+      0 0.5rem 2.5rem rgb(25 36 85 / 10%);
+    display: block;
+    grid-area: video;
+    height: auto;
+    mix-blend-mode: screen;
+    object-fit: cover;
+    overflow: hidden;
+    width: 100%;
+  }
+
+  .shadow-copy {
+    container-type: inline-size;
+    display: grid;
+    grid-area: copy;
+    grid-template-rows: auto minmax(10rem, 1fr);
+    min-width: 0;
+  }
+
+  .scroll-title {
+    color: #0f9cd8;
+    font-family: var(--font-special-gothic-expanded-one), sans-serif;
+    font-size: clamp(2rem, min(6.5vw, 16cqi), 9rem);
+    font-weight: 400;
+    letter-spacing: 0.08em;
+    line-height: 1;
+    margin: 0 0 2.5rem;
+    text-transform: uppercase;
+  }
+
+  .content-panel {
+    align-self: start;
+    grid-column: 1;
+    grid-row: 2;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(0.625rem);
+    transition:
+      opacity 300ms ease,
+      transform 300ms ease;
+  }
+
+  .content-panel.is-active {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .content-title {
+    color: #0f9cd8;
+    font-family: var(--font-plus-jakarta-sans), sans-serif;
+    font-size: clamp(0.8125rem, 1.3vw, 1.1875rem);
+    font-weight: 800;
+    letter-spacing: 0.18em;
+    margin: 0 0 0.625rem;
+    text-transform: uppercase;
+  }
+
+  .content-body {
+    color: #192455;
+    font-family: var(--font-plus-jakarta-sans), sans-serif;
+    font-size: clamp(0.875rem, 1.4vw, 1.25rem);
+    font-weight: 400;
+    line-height: 1.7;
+    margin: 0;
+    max-width: 25rem;
+  }
+
+  @media (max-width: 48rem) {
+    .shadow-section {
+      height: 240vh;
+      margin-top: 3rem;
+    }
+    .shadow-stage {
+      align-content: center;
+      gap: 0;
+      grid-template-areas:
+        "hint"
+        "video"
+        "copy";
+      grid-template-columns: 1fr;
+      grid-template-rows: auto auto auto;
+      width: min(92%, 34rem);
+    }
+    .scroll-title {
+      font-size: clamp(2rem, 11vw, 3.375rem);
+      margin-top: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .shadow-copy {
+      grid-template-rows: auto minmax(11rem, 1fr);
+    }
+    .content-body {
+      font-size: clamp(0.8125rem, 3.8vw, 1.125rem);
+      max-width: none;
+    }
+  }
+</style>
