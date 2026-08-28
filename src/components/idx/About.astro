@@ -57,105 +57,117 @@ export const cards: Cards[] = [
     })
   }
   <div class="about-card-controls">
-    <button id="next" type="button" aria-label="Show next About card"
-      ><span aria-hidden="true">→</span></button
+    <button data-action="next" type="button" aria-label="Show next About card"
+      ><span aria-hidden="true"></span></button
     >
-    <button id="prev" type="button" aria-label="Show previous About card"
-      ><span aria-hidden="true">←</span></button
+    <button
+      data-action="prev"
+      type="button"
+      aria-label="Show previous About card"
+      ><span aria-hidden="true"></span></button
     >
   </div>
   <script>
-    const cardElements = document.querySelectorAll("[data-card]");
-    const nextButton = document.querySelector<HTMLButtonElement>("#next");
-    const prevButton = document.querySelector<HTMLButtonElement>("#prev");
-    let currentIndex = 0;
-    let isAnimating = false;
+    document.addEventListener("astro:page-load", () => {
+      const section = document.querySelector<HTMLElement>(".about-section");
+      if (!section) return;
 
-    const updateControls = () => {
-      if (nextButton && prevButton) {
-        nextButton.disabled =
-          isAnimating || currentIndex === cardElements.length - 1;
-        prevButton.disabled = isAnimating || currentIndex === 0;
-      }
-    };
+      const cardElements = section.querySelectorAll("[data-card]");
+      const nextButton = section.querySelector<HTMLButtonElement>(
+        '[data-action="next"]',
+      );
+      const prevButton = section.querySelector<HTMLButtonElement>(
+        '[data-action="prev"]',
+      );
+      let currentIndex = 0;
+      let isAnimating = false;
 
-    const renderCards = () => {
-      cardElements.forEach((card, cardIndex) => {
-        card.classList.remove("leaving", "entering", "arriving");
-        card.classList.toggle("active", currentIndex === cardIndex);
-        card.classList.toggle("stacked", currentIndex < cardIndex);
-        card.classList.toggle("past", currentIndex > cardIndex);
-      });
-      updateControls();
-    };
-
-    const afterImageTransition = (card: Element, onComplete: () => void) => {
-      const image = card.querySelector<HTMLElement>(".about-card-img");
-
-      if (!image) {
-        onComplete();
-        return;
-      }
-
-      let completed = false;
-      const complete = () => {
-        if (completed) return;
-
-        completed = true;
-        window.clearTimeout(fallback);
-        image.removeEventListener("transitionend", onTransitionEnd);
-        onComplete();
+      const updateControls = () => {
+        if (nextButton && prevButton) {
+          nextButton.disabled =
+            isAnimating || currentIndex === cardElements.length - 1;
+          prevButton.disabled = isAnimating || currentIndex === 0;
+        }
       };
 
-      const onTransitionEnd = (event: TransitionEvent) => {
-        if (event.target === image && event.propertyName === "transform")
-          complete();
+      const renderCards = () => {
+        cardElements.forEach((card, cardIndex) => {
+          card.classList.remove("leaving", "entering", "arriving");
+          card.classList.toggle("active", currentIndex === cardIndex);
+          card.classList.toggle("stacked", currentIndex < cardIndex);
+          card.classList.toggle("past", currentIndex > cardIndex);
+        });
+        updateControls();
       };
 
-      const fallback = window.setTimeout(complete, 550);
-      image.addEventListener("transitionend", onTransitionEnd);
-    };
+      const afterImageTransition = (card: Element, onComplete: () => void) => {
+        const image = card.querySelector<HTMLElement>(".about-card-img");
 
-    const goNext = () => {
-      if (isAnimating || currentIndex === cardElements.length - 1) return;
+        if (!image) {
+          onComplete();
+          return;
+        }
 
-      isAnimating = true;
-      updateControls();
+        let completed = false;
+        const complete = () => {
+          if (completed) return;
 
-      const outgoingCard = cardElements[currentIndex]!;
-      afterImageTransition(outgoingCard, () => {
-        currentIndex++;
-        isAnimating = false;
-        renderCards();
-      });
-      outgoingCard.classList.add("leaving");
-    };
+          completed = true;
+          window.clearTimeout(fallback);
+          image.removeEventListener("transitionend", onTransitionEnd);
+          onComplete();
+        };
 
-    const goPrevious = () => {
-      if (isAnimating || currentIndex === 0) return;
+        const onTransitionEnd = (event: TransitionEvent) => {
+          if (event.target === image && event.propertyName === "transform")
+            complete();
+        };
 
-      isAnimating = true;
-      updateControls();
+        const fallback = window.setTimeout(complete, 550);
+        image.addEventListener("transitionend", onTransitionEnd);
+      };
 
-      const incomingCard = cardElements[currentIndex - 1]!;
-      incomingCard.classList.remove("past");
-      incomingCard.classList.add("entering");
+      const goNext = () => {
+        if (isAnimating || currentIndex === cardElements.length - 1) return;
 
-      afterImageTransition(incomingCard, () => {
-        currentIndex--;
-        isAnimating = false;
-        renderCards();
-      });
+        isAnimating = true;
+        updateControls();
 
-      window.requestAnimationFrame(() => {
-        incomingCard.classList.add("arriving");
-      });
-    };
+        const outgoingCard = cardElements[currentIndex]!;
+        afterImageTransition(outgoingCard, () => {
+          currentIndex++;
+          isAnimating = false;
+          renderCards();
+        });
+        outgoingCard.classList.add("leaving");
+      };
 
-    nextButton?.addEventListener("click", goNext);
-    prevButton?.addEventListener("click", goPrevious);
+      const goPrevious = () => {
+        if (isAnimating || currentIndex === 0) return;
 
-    renderCards();
+        isAnimating = true;
+        updateControls();
+
+        const incomingCard = cardElements[currentIndex - 1]!;
+        incomingCard.classList.remove("past");
+        incomingCard.classList.add("entering");
+
+        afterImageTransition(incomingCard, () => {
+          currentIndex--;
+          isAnimating = false;
+          renderCards();
+        });
+
+        window.requestAnimationFrame(() => {
+          incomingCard.classList.add("arriving");
+        });
+      };
+
+      nextButton?.addEventListener("click", goNext);
+      prevButton?.addEventListener("click", goPrevious);
+
+      renderCards();
+    });
   </script>
 </section>
 
@@ -291,8 +303,7 @@ export const cards: Cards[] = [
     left: var(--about-image-left);
   }
 
-  #next,
-  #prev {
+  .about-card-controls [data-action] {
     position: absolute;
     top: 0;
     display: grid;
@@ -309,18 +320,17 @@ export const cards: Cards[] = [
     pointer-events: auto;
   }
 
-  #prev {
+  .about-card-controls [data-action="prev"] {
     left: 0;
     border-radius: var(--about-image-radius) 0 0 var(--about-image-radius);
   }
 
-  #next {
+  .about-card-controls [data-action="next"] {
     right: 0;
     border-radius: 0 var(--about-image-radius) var(--about-image-radius) 0;
   }
 
-  #next::before,
-  #prev::before {
+  .about-card-controls [data-action]::before {
     position: absolute;
     top: 50%;
     left: 50%;
@@ -334,21 +344,31 @@ export const cards: Cards[] = [
     transition: transform 450ms cubic-bezier(0.34, 1.56, 0.64, 1);
   }
 
-  #next span,
-  #prev span {
+  .about-card-controls [data-action] span {
     position: relative;
     z-index: 1;
+    box-sizing: border-box;
+    width: 0.75rem;
+    height: 0.75rem;
+    border: solid currentColor;
+    border-width: 0 0.25rem 0.25rem 0;
+    transform: rotate(-45deg);
   }
 
-  #next:hover::before,
-  #next:focus-visible::before,
-  #prev:hover::before,
-  #prev:focus-visible::before {
+  .about-card-controls [data-action="prev"] span {
+    transform: translateX(0.125rem) rotate(135deg);
+  }
+
+  .about-card-controls [data-action="next"] span {
+    transform: translateX(-0.125rem) rotate(-45deg);
+  }
+
+  .about-card-controls [data-action]:hover::before,
+  .about-card-controls [data-action]:focus-visible::before {
     transform: translate(-50%, -50%) scale(22);
   }
 
-  #next:disabled,
-  #prev:disabled {
+  .about-card-controls [data-action]:disabled {
     cursor: default;
     opacity: 0;
     pointer-events: none;
@@ -430,8 +450,7 @@ export const cards: Cards[] = [
       transform: translateX(-50%);
     }
 
-    #next,
-    #prev {
+    .about-card-controls [data-action] {
       width: max(44px, 15%);
     }
   }

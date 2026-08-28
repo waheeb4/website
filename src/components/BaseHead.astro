@@ -1,5 +1,6 @@
 ---
 import type { Metadata } from "../types";
+import { ClientRouter } from "astro:transitions";
 
 interface Props {
   metadata: Metadata;
@@ -15,3 +16,4 @@ const { metadata } = Astro.props;
 <meta property="og:image" content={metadata.og.image} />
 <meta property="og:image:alt" content={metadata.og.alt} />
 <meta property="og:type" content={metadata.og.type} />
+<ClientRouter />

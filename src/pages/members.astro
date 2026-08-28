@@ -1,0 +1,475 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import type { Metadata } from "../types";
+import { members } from "../content/members";
+
+import { getImage } from "astro:assets";
+const metadata: Metadata = {
+  title: "Triton | Members",
+  description:
+    "Triton's member roster with different subteams and hierarchy demonstration",
+  og: {
+    image: "/og.png",
+    alt: "Triton x AASTMT preview image",
+    type: "website",
+  },
+};
+
+const optimizedMembers = await Promise.all(
+  members.map(async (roster) => ({
+    ...roster,
+    member: await Promise.all(
+      roster.member.map(async (member) => ({
+        ...member,
+        image: await getImage({
+          src: member.image,
+          width: 280,
+          height: 272,
+          fit: "cover",
+          format: "webp",
+        }),
+      })),
+    ),
+  })),
+);
+
+const membersData = JSON.stringify(optimizedMembers);
+---
+
+<BaseLayout {metadata}>
+  <section class="members-section">
+    <div class="members-heading">
+      <button
+        data-action="prev"
+        type="button"
+        aria-label="Show previous team year"
+      >
+        <span aria-hidden="true"></span>
+      </button>
+      <h3 class="members-year"></h3>
+      <button data-action="next" type="button" aria-label="Show next team year">
+        <span aria-hidden="true"></span>
+      </button>
+    </div>
+    <div class="members-list"></div>
+  </section>
+  <script
+    is:inline
+    id="members-data"
+    type="application/json"
+    set:html={membersData}
+  />
+  <script>
+    import Facebook from "../assets/facebook.svg?url";
+    import Instagram from "../assets/instagram.svg?url";
+    import LinkedIn from "../assets/linkedin.svg?url";
+    import Mail from "../assets/mail.svg?url";
+    import type { Member } from "../types";
+
+    document.addEventListener("astro:page-load", () => {
+      const membersDataElement =
+        document.querySelector<HTMLScriptElement>("#members-data");
+      if (!membersDataElement?.textContent) return;
+
+      const members = JSON.parse(membersDataElement.textContent) as Member[];
+
+      const section = document.querySelector<HTMLElement>(".members-section");
+      if (!section) return;
+
+      const nextButton = section.querySelector<HTMLButtonElement>(
+        '[data-action="next"]',
+      );
+      const prevButton = section.querySelector<HTMLButtonElement>(
+        '[data-action="prev"]',
+      );
+
+      const list = section.querySelector<HTMLDivElement>(".members-list");
+      if (!list) return;
+
+      const year = section.querySelector<HTMLHeadingElement>(".members-year");
+
+      let index = 0;
+
+      nextButton?.addEventListener("click", () => {
+        if (index < members.length - 1) {
+          index++;
+          updateRoster();
+        }
+      });
+
+      prevButton?.addEventListener("click", () => {
+        if (index > 0) {
+          index--;
+          updateRoster();
+        }
+      });
+
+      const renderMembers = () => {
+        const roster = members[index];
+        if (!roster) return;
+
+        if (year) year.textContent = `${roster.year}`;
+
+        const memberElements = roster.member.map((member) => {
+          const memberElement = document.createElement("div");
+          memberElement.classList.add("member");
+          memberElement.classList.toggle(
+            "member--supervisor",
+            member.role === "Academic Supervisor",
+          );
+
+          const firstName = document.createElement("span");
+          firstName.classList.add("member-first-name");
+          firstName.textContent = member.firstName;
+
+          const lastName = document.createElement("span");
+          lastName.classList.add("member-last-name");
+          lastName.textContent = member.lastName;
+
+          const role = document.createElement("span");
+          role.classList.add("member-role");
+          role.textContent = member.role;
+
+          const img = document.createElement("img");
+          img.classList.add("member-image");
+          img.src = member.image.src;
+          img.width = 280;
+          img.height = 272;
+          img.alt = member.alt;
+          img.loading = "lazy";
+          img.decoding = "async";
+
+          memberElement.append(img, firstName, lastName, role);
+
+          member.links?.forEach((link) => {
+            const linkElement = document.createElement("a");
+            linkElement.classList.add("member-link");
+            linkElement.href = link.link;
+            linkElement.target = "_blank";
+            linkElement.rel = "noopener noreferrer";
+            linkElement.setAttribute(
+              "aria-label",
+              `${member.firstName}'s ${link.label}`,
+            );
+
+            const icon = document.createElement("img");
+            icon.classList.add("member-link-icon");
+            icon.alt = "";
+            icon.setAttribute("aria-hidden", "true");
+
+            switch (link.label) {
+              case "LinkedIn":
+                icon.src = LinkedIn;
+                break;
+              case "Facebook":
+                icon.src = Facebook;
+                break;
+              case "Instagram":
+                icon.src = Instagram;
+                break;
+              case "Email":
+                icon.src = Mail;
+                break;
+              default:
+                linkElement.textContent = link.label;
+                memberElement.append(linkElement);
+                return;
+            }
+
+            linkElement.append(icon);
+            memberElement.append(linkElement);
+          });
+
+          return memberElement;
+        });
+
+        list.replaceChildren(...memberElements);
+      };
+
+      const updateRoster = () => {
+        if (document.startViewTransition) {
+          document.startViewTransition(renderMembers);
+          return;
+        }
+        renderMembers();
+      };
+
+      renderMembers();
+    });
+  </script>
+
+  <style is:global>
+    .members-section {
+      padding: clamp(6.5rem, 12vw, 9rem) clamp(1rem, 4vw, 3rem)
+        clamp(9rem, 16vw, 14rem);
+    }
+
+    .members-heading {
+      display: grid;
+      grid-template-columns: clamp(3.75rem, 8vw, 5.25rem) auto clamp(
+          3.75rem,
+          8vw,
+          5.25rem
+        );
+      width: fit-content;
+      align-items: center;
+      justify-content: center;
+      min-height: clamp(4rem, 8vw, 5.25rem);
+      margin: 0 auto clamp(2rem, 5vw, 3.5rem);
+      overflow: hidden;
+      border-radius: 999px;
+      background: transparent;
+    }
+
+    .members-year {
+      position: relative;
+      z-index: 2;
+      min-width: 4ch;
+      margin: 0;
+      padding-inline: clamp(1.25rem, 4vw, 3rem);
+      color: #0f9cd8;
+      font-family: var(--font-plus-jakarta-sans), sans-serif;
+      font-size: clamp(2.5rem, 7vw, 4.75rem);
+      font-weight: 800;
+      letter-spacing: -0.06em;
+      line-height: 1;
+      text-align: center;
+    }
+
+    .members-heading [data-action] {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      width: 100%;
+      height: 100%;
+      place-items: center;
+      border: 0;
+      border-radius: 0;
+      padding: 0;
+      background: transparent;
+      color: #fefefe;
+      cursor: pointer;
+      isolation: isolate;
+      font:
+        700 clamp(1.5rem, 3vw, 2rem) / 1 var(--font-plus-jakarta-sans),
+        sans-serif;
+      transition:
+        background-color 160ms ease,
+        color 160ms ease;
+    }
+
+    .members-heading [data-action]::after {
+      position: absolute;
+      top: 0;
+      z-index: 0;
+      width: calc(100% + clamp(3rem, 7vw, 1rem));
+      height: 100%;
+      content: "";
+      pointer-events: none;
+    }
+
+    .members-heading [data-action="prev"]::after {
+      left: 0;
+      background: linear-gradient(
+        to right,
+        #223064 0%,
+        rgb(34 48 100 / 90%) 8%,
+        rgb(34 48 100 / 78%) 16%,
+        rgb(34 48 100 / 66%) 22%,
+        rgb(34 48 100 / 55%) 28%,
+        rgb(34 48 100 / 45%) 34%,
+        rgb(34 48 100 / 36%) 40%,
+        rgb(34 48 100 / 28%) 46%,
+        rgb(34 48 100 / 21%) 52%,
+        rgb(34 48 100 / 16%) 58%,
+        rgb(34 48 100 / 12%) 64%,
+        rgb(34 48 100 / 9%) 70%,
+        rgb(34 48 100 / 6%) 76%,
+        rgb(34 48 100 / 4%) 82%,
+        rgb(34 48 100 / 2%) 88%,
+        rgb(34 48 100 / 1%) 94%,
+        rgb(34 48 100 / 0%) 100%
+      );
+    }
+
+    .members-heading [data-action="next"]::after {
+      right: 0;
+      background: linear-gradient(
+        to left,
+        #223064 0%,
+        rgb(34 48 100 / 90%) 8%,
+        rgb(34 48 100 / 78%) 16%,
+        rgb(34 48 100 / 66%) 22%,
+        rgb(34 48 100 / 55%) 28%,
+        rgb(34 48 100 / 45%) 34%,
+        rgb(34 48 100 / 36%) 40%,
+        rgb(34 48 100 / 28%) 46%,
+        rgb(34 48 100 / 21%) 52%,
+        rgb(34 48 100 / 16%) 58%,
+        rgb(34 48 100 / 12%) 64%,
+        rgb(34 48 100 / 9%) 70%,
+        rgb(34 48 100 / 6%) 76%,
+        rgb(34 48 100 / 4%) 82%,
+        rgb(34 48 100 / 2%) 88%,
+        rgb(34 48 100 / 1%) 94%,
+        rgb(34 48 100 / 0%) 100%
+      );
+    }
+
+    .members-heading [data-action]:hover {
+      color: #0f9cd8;
+    }
+
+    .members-heading [data-action]:focus-visible {
+      position: relative;
+      z-index: 1;
+      outline: 3px solid #0f9cd8;
+      outline-offset: -3px;
+    }
+
+    .members-heading [data-action] span {
+      position: relative;
+      z-index: 1;
+      box-sizing: border-box;
+      width: 0.75rem;
+      height: 0.75rem;
+      border: solid currentColor;
+      border-width: 0 0.25rem 0.25rem 0;
+      transform: rotate(-45deg);
+    }
+
+    .members-heading [data-action="prev"] span {
+      transform: rotate(135deg);
+    }
+
+    .members-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 280px));
+      justify-content: center;
+      gap: 1.5rem;
+      max-width: 80rem;
+      margin: 0 auto;
+    }
+
+    .member {
+      position: relative;
+      display: grid;
+      grid-template-rows: 272px auto auto 1fr;
+      width: 280px;
+      min-height: 400px;
+      overflow: hidden;
+      border-radius: 20px;
+      background: #fefefe;
+      box-shadow: 0 8px 32px rgb(25 36 85 / 12%);
+    }
+
+    .member-image {
+      grid-row: 1;
+      width: 100%;
+      height: 272px;
+      object-fit: cover;
+      object-position: top center;
+    }
+
+    .member-first-name,
+    .member-last-name,
+    .member-role {
+      display: block;
+      margin-inline: 1.125rem;
+      font-family: var(--font-plus-jakarta-sans), sans-serif;
+    }
+
+    .member-first-name {
+      margin-top: 1rem;
+      color: #192455;
+      font-size: 1.625rem;
+      font-weight: 800;
+      letter-spacing: -0.01em;
+      line-height: 1.15;
+    }
+
+    .member-last-name {
+      color: rgb(25 36 85 / 65%);
+      font-size: 0.9375rem;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      line-height: 1.2;
+      text-transform: uppercase;
+    }
+
+    .member-role {
+      margin-top: 0.35rem;
+      margin-bottom: 1rem;
+      color: #0f9cd8;
+      font-size: 0.9375rem;
+      line-height: 1.3;
+    }
+
+    .member-link {
+      position: absolute;
+      right: 0.875rem;
+      bottom: 0.75rem;
+      display: grid;
+      width: 1.25rem;
+      height: 1.25rem;
+      place-items: center;
+      color: #0077b5;
+      opacity: 0.65;
+      transition:
+        opacity 200ms ease,
+        transform 200ms ease;
+    }
+
+    .member-link:hover,
+    .member-link:focus-visible {
+      opacity: 1;
+      transform: scale(1.15);
+    }
+
+    .member-link:focus-visible {
+      outline: 2px solid #0f9cd8;
+      outline-offset: 3px;
+    }
+
+    .member-link-icon {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    .member--supervisor {
+      box-shadow: inset 0 0 0 2px #0f9cd8;
+      transition:
+        box-shadow 350ms ease,
+        transform 350ms cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .member--supervisor .member-role {
+      font-weight: 700;
+      letter-spacing: 0.03em;
+    }
+
+    .member--supervisor:hover {
+      box-shadow:
+        inset 0 0 0 2px #0f9cd8,
+        0 24px 60px rgb(25 36 85 / 20%),
+        0 0 40px rgb(15 156 216 / 35%);
+      transform: translateY(-10px) scale(1.03);
+    }
+
+    @media (max-width: 30rem) {
+      .members-section {
+        padding-inline: 1rem;
+      }
+
+      .members-list {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .member {
+        width: min(100%, 280px);
+        justify-self: center;
+      }
+    }
+  </style>
+</BaseLayout>

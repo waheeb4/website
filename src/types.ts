@@ -40,3 +40,15 @@ export interface Link {
 export interface ContactLink extends Link {
   tag: SvgComponent;
 }
+
+export interface Member {
+  year: number;
+  member: {
+    firstName: string;
+    lastName: string;
+    role: string;
+    image: ImageMetadata;
+    alt: string;
+    links?: Link[];
+  }[];
+}
