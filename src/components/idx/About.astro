@@ -58,13 +58,13 @@ export const cards: Cards[] = [
   }
   <div class="about-card-controls">
     <button data-action="next" type="button" aria-label="Show next About card"
-      ><span aria-hidden="true">→</span></button
+      ><span aria-hidden="true"></span></button
     >
     <button
       data-action="prev"
       type="button"
       aria-label="Show previous About card"
-      ><span aria-hidden="true">←</span></button
+      ><span aria-hidden="true"></span></button
     >
   </div>
   <script>
@@ -347,6 +347,20 @@ export const cards: Cards[] = [
   .about-card-controls [data-action] span {
     position: relative;
     z-index: 1;
+    box-sizing: border-box;
+    width: 0.75rem;
+    height: 0.75rem;
+    border: solid currentColor;
+    border-width: 0 0.25rem 0.25rem 0;
+    transform: rotate(-45deg);
+  }
+
+  .about-card-controls [data-action="prev"] span {
+    transform: translateX(0.125rem) rotate(135deg);
+  }
+
+  .about-card-controls [data-action="next"] span {
+    transform: translateX(-0.125rem) rotate(-45deg);
   }
 
   .about-card-controls [data-action]:hover::before,
