@@ -24,13 +24,9 @@ const videoContent: VideoContent[] = [
 ];
 ---
 
-<section
-  class="shadow-section"
-  data-shadow-section
-  aria-labelledby="shadow-heading"
->
+<section class="shadow-section" data-shadow-section aria-label="Shadow Wing">
   <div class="shadow-stage">
-    <p class="scroll-hint">Scroll to see Shadow Wing&apos;s capabilities</p>
+    <p class="scroll-hint">Scroll to see Shadow Wing's capabilities</p>
 
     <video
       class="scroll-video"
@@ -42,8 +38,8 @@ const videoContent: VideoContent[] = [
       aria-label="Shadow Wing remotely operated vehicle capability animation"
     ></video>
 
-    <div class="shadow-copy" aria-live="polite">
-      <h2 class="scroll-title" id="shadow-heading">Shadow Wing</h2>
+    <div class="shadow-copy">
+      <h2 class="scroll-title">Shadow Wing</h2>
       {
         videoContent.map((content) => (
           <article
@@ -63,102 +59,112 @@ const videoContent: VideoContent[] = [
 
 <script>
   document.addEventListener("astro:page-load", () => {
-    const sections = document.querySelectorAll<HTMLElement>(
+    const section = document.querySelector<HTMLElement>(
       "[data-shadow-section]",
     );
+    if (!section) return;
+
     const frameInterval = 1 / 8;
     const inertia = 0.035;
 
-    sections.forEach((section) => {
-      const video = section.querySelector<HTMLVideoElement>(
-        "[data-shadow-video]",
-      );
-      const panels = [
-        ...section.querySelectorAll<HTMLElement>("[data-shadow-panel]"),
-      ];
-      if (!video) return;
+    const video = section.querySelector<HTMLVideoElement>(
+      "[data-shadow-video]",
+    );
+    const panels = [
+      ...section.querySelectorAll<HTMLElement>("[data-shadow-panel]"),
+    ];
+    if (!video) return;
 
-      let duration = 0;
-      let frameId = 0;
-      let settleFrameId = 0;
-      let targetTime = 0;
-      let renderedTime = 0;
+    let duration = 0;
+    let frameId = 0;
+    let settleFrameId = 0;
+    let targetTime = 0;
+    let renderedTime = 0;
 
-      const updatePanels = (time: number) => {
-        panels.forEach((panel) => {
-          const start = Number(panel.dataset.start);
-          const end = Number(panel.dataset.end);
-          panel.classList.toggle("is-active", time >= start && time <= end);
-        });
-      };
-
-      const renderAt = (time: number) => {
-        const frameTime = Math.min(
-          Math.round(time / frameInterval) * frameInterval,
-          duration,
-        );
-        updatePanels(time);
-
-        if (Math.abs(video.currentTime - frameTime) >= frameInterval / 2) {
-          video.currentTime = frameTime;
-        }
-      };
-
-      const settle = () => {
-        settleFrameId = 0;
-
-        const difference = targetTime - renderedTime;
-        renderedTime =
-          Math.abs(difference) < 0.01
-            ? targetTime
-            : renderedTime + difference * inertia;
-        renderAt(renderedTime);
-
-        if (Math.abs(targetTime - renderedTime) >= 0.01) {
-          settleFrameId = window.requestAnimationFrame(settle);
-        }
-      };
-
-      const scheduleSettling = () => {
-        if (!settleFrameId)
-          settleFrameId = window.requestAnimationFrame(settle);
-      };
-
-      const update = () => {
-        frameId = 0;
-        if (!duration) return;
-
-        const rect = section.getBoundingClientRect();
-        const scrollable = section.offsetHeight - window.innerHeight;
-        const progress = Math.max(0, Math.min(1, -rect.top / scrollable));
-        targetTime = progress * duration;
-        scheduleSettling();
-      };
-
-      const scheduleUpdate = () => {
-        if (!frameId) frameId = window.requestAnimationFrame(update);
-      };
-
-      video.addEventListener("loadedmetadata", () => {
-        duration = video.duration;
-        renderedTime = video.currentTime;
-        scheduleUpdate();
+    const updatePanels = (time: number) => {
+      panels.forEach((panel) => {
+        const start = Number(panel.dataset.start);
+        const end = Number(panel.dataset.end);
+        panel.classList.toggle("is-active", time >= start && time <= end);
       });
-      video.addEventListener(
-        "canplay",
-        () => {
-          void video
-            .play()
-            .then(() => video.pause())
-            .catch(() => undefined);
-        },
-        { once: true },
-      );
+    };
 
-      window.addEventListener("scroll", scheduleUpdate, { passive: true });
-      window.addEventListener("resize", scheduleUpdate);
-      video.load();
+    const renderAt = (time: number) => {
+      const frameTime = Math.min(
+        Math.round(time / frameInterval) * frameInterval,
+        duration,
+      );
+      updatePanels(time);
+
+      if (Math.abs(video.currentTime - frameTime) >= frameInterval / 2) {
+        video.currentTime = frameTime;
+      }
+    };
+
+    const settle = () => {
+      settleFrameId = 0;
+
+      const difference = targetTime - renderedTime;
+      renderedTime =
+        Math.abs(difference) < 0.01
+          ? targetTime
+          : renderedTime + difference * inertia;
+      renderAt(renderedTime);
+
+      if (Math.abs(targetTime - renderedTime) >= 0.01) {
+        settleFrameId = window.requestAnimationFrame(settle);
+      }
+    };
+
+    const scheduleSettling = () => {
+      if (!settleFrameId) settleFrameId = window.requestAnimationFrame(settle);
+    };
+
+    const update = () => {
+      frameId = 0;
+      if (!duration) return;
+
+      const rect = section.getBoundingClientRect();
+      const scrollable = section.offsetHeight - window.innerHeight;
+      const progress = Math.max(0, Math.min(1, -rect.top / scrollable));
+      targetTime = progress * duration;
+      scheduleSettling();
+    };
+
+    const scheduleUpdate = () => {
+      if (!frameId) frameId = window.requestAnimationFrame(update);
+    };
+
+    video.addEventListener("loadedmetadata", () => {
+      duration = video.duration;
+      renderedTime = video.currentTime;
+      scheduleUpdate();
     });
+    video.addEventListener(
+      "canplay",
+      () => {
+        void video
+          .play()
+          .then(() => video.pause())
+          .catch(() => undefined);
+      },
+      { once: true },
+    );
+
+    window.addEventListener("scroll", scheduleUpdate, { passive: true });
+    window.addEventListener("resize", scheduleUpdate);
+    document.addEventListener(
+      "astro:before-swap",
+      () => {
+        window.removeEventListener("scroll", scheduleUpdate);
+        window.removeEventListener("resize", scheduleUpdate);
+        window.cancelAnimationFrame(frameId);
+        window.cancelAnimationFrame(settleFrameId);
+        video.pause();
+      },
+      { once: true },
+    );
+    video.load();
   });
 </script>
 
@@ -187,24 +193,24 @@ const videoContent: VideoContent[] = [
 
   .scroll-hint {
     align-self: end;
-    color: rgb(25 36 85 / 65%);
+    color: color-mix(in srgb, var(--navy) 65%, transparent);
     font-family: var(--font-plus-jakarta-sans), sans-serif;
     font-size: 0.6875rem;
     font-weight: 500;
     grid-area: hint;
     letter-spacing: 0.12em;
-    margin: 0 0 0.5rem;
+    margin-bottom: 0.5rem;
     text-align: center;
     text-transform: uppercase;
   }
 
   .scroll-video {
     aspect-ratio: 16 / 9;
-    border: 1.5px solid rgb(15 156 216 / 45%);
+    border: 1.5px solid color-mix(in srgb, var(--blue) 45%, transparent);
     border-radius: 1.25rem;
     box-shadow:
-      0 0 2rem rgb(15 156 216 / 12%),
-      0 0.5rem 2.5rem rgb(25 36 85 / 10%);
+      0 0 2rem color-mix(in srgb, var(--blue) 12%, transparent),
+      0 0.5rem 2.5rem color-mix(in srgb, var(--navy) 10%, transparent);
     display: block;
     grid-area: video;
     height: auto;
@@ -223,13 +229,13 @@ const videoContent: VideoContent[] = [
   }
 
   .scroll-title {
-    color: #0f9cd8;
+    color: var(--blue);
     font-family: var(--font-special-gothic-expanded-one), sans-serif;
     font-size: clamp(2rem, min(6.5vw, 16cqi), 9rem);
     font-weight: 400;
     letter-spacing: 0.08em;
     line-height: 1;
-    margin: 0 0 2.5rem;
+    margin-bottom: 2.5rem;
     text-transform: uppercase;
   }
 
@@ -251,26 +257,26 @@ const videoContent: VideoContent[] = [
   }
 
   .content-title {
-    color: #0f9cd8;
+    color: var(--blue);
     font-family: var(--font-plus-jakarta-sans), sans-serif;
     font-size: clamp(0.8125rem, 1.3vw, 1.1875rem);
     font-weight: 800;
     letter-spacing: 0.18em;
-    margin: 0 0 0.625rem;
+    margin-bottom: 0.625rem;
     text-transform: uppercase;
   }
 
   .content-body {
-    color: #192455;
+    color: var(--navy);
     font-family: var(--font-plus-jakarta-sans), sans-serif;
     font-size: clamp(0.875rem, 1.4vw, 1.25rem);
     font-weight: 400;
     line-height: 1.7;
-    margin: 0;
     max-width: 25rem;
   }
 
-  @media (max-width: 48rem) {
+  @media (width < 48rem),
+    (min-width: 48rem) and (max-width: 64rem) and (orientation: portrait) {
     .shadow-section {
       height: 240vh;
       margin-top: 3rem;

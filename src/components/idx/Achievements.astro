@@ -13,9 +13,9 @@ import IMG0635 from "../../assets/achievements/IMG_0635.jpg";
 import IMG0639 from "../../assets/achievements/IMG_0639.jpg";
 import IMG1530 from "../../assets/achievements/IMG_1530.jpg";
 import IMG1542 from "../../assets/achievements/IMG_1542.jpg";
-import type { Achievements } from "../../types";
+import type { Achievement } from "../../types";
 
-const achievements: Achievements[] = [
+const achievements: Achievement[] = [
   {
     title: "MATE 2026",
     body: "1st Place AAST · Best ROV Design · Best Technical Report · Best Engineering Presentation · Best Team Spirit",
@@ -43,7 +43,7 @@ const leftPhotos = [
 const rightPhotos = [DSC04387, DSC04401, IMG0639, DSC01096, DSC02345, IMG1542];
 ---
 
-<section class="achievements-section" aria-labelledby="achievements-heading">
+<section class="achievements-section" aria-label="Achievements">
   <div class="photo-band photo-band--left" aria-hidden="true">
     <div class="photo-belt photo-belt--up">
       {
@@ -64,7 +64,7 @@ const rightPhotos = [DSC04387, DSC04401, IMG0639, DSC01096, DSC02345, IMG1542];
   </div>
 
   <div class="center-content">
-    <h2 class="achievements-title" id="achievements-heading">Achievements</h2>
+    <h2 class="achievements-title">Achievements</h2>
 
     {
       achievements.map((achievement) => (
@@ -107,7 +107,6 @@ const rightPhotos = [DSC04387, DSC04401, IMG0639, DSC01096, DSC02345, IMG1542];
     min-height: 0;
     overflow: hidden;
     padding: 10vh 0 0;
-    box-sizing: border-box;
   }
 
   .photo-band {
@@ -174,7 +173,7 @@ const rightPhotos = [DSC04387, DSC04401, IMG0639, DSC01096, DSC02345, IMG1542];
     overflow: hidden;
     margin-bottom: 1.4vw;
     border-radius: 16px;
-    box-shadow: 0 6px 28px rgb(25 36 85 / 14%);
+    box-shadow: 0 6px 28px color-mix(in srgb, var(--navy) 14%, transparent);
   }
 
   .photo-card-image {
@@ -200,8 +199,8 @@ const rightPhotos = [DSC04387, DSC04401, IMG0639, DSC01096, DSC02345, IMG1542];
   }
 
   .achievements-title {
-    margin: 0 0 5vh;
-    color: #0f9cd8;
+    margin-bottom: 5vh;
+    color: var(--blue);
     font-family: var(--font-special-gothic-expanded-one), sans-serif;
     font-size: clamp(1.25rem, 9.6cqi, 5.5rem);
     font-weight: 400;
@@ -219,8 +218,8 @@ const rightPhotos = [DSC04387, DSC04401, IMG0639, DSC01096, DSC02345, IMG1542];
   }
 
   .achievement-title {
-    margin: 0 0 1vh;
-    color: #0f9cd8;
+    margin-bottom: 1vh;
+    color: var(--blue);
     font-family: var(--font-plus-jakarta-sans), sans-serif;
     font-size: clamp(0.8125rem, 1.3vw, 1.1875rem);
     font-weight: 800;
@@ -229,8 +228,8 @@ const rightPhotos = [DSC04387, DSC04401, IMG0639, DSC01096, DSC02345, IMG1542];
   }
 
   .achievement-body {
-    margin: 0 0 0.6vh;
-    color: #192455;
+    margin-bottom: 0.6vh;
+    color: var(--navy);
     font-family: var(--font-plus-jakarta-sans), sans-serif;
     font-size: clamp(0.9375rem, 1.6vw, 1.4375rem);
     font-weight: 400;
@@ -238,15 +237,16 @@ const rightPhotos = [DSC04387, DSC04401, IMG0639, DSC01096, DSC02345, IMG1542];
   }
 
   .achievement-int {
-    margin: 0.5vh 0 0;
-    color: #0f9cd8;
+    margin-top: 0.5vh;
+    color: var(--blue);
     font-family: var(--font-plus-jakarta-sans), sans-serif;
     font-size: clamp(1.0625rem, 2vw, 1.75rem);
     font-weight: 800;
     line-height: 1.35;
   }
 
-  @media (max-width: 48rem) {
+  @media (width < 48rem),
+    (min-width: 48rem) and (max-width: 64rem) and (orientation: portrait) {
     .achievements-section {
       height: auto;
       min-height: 100svh;

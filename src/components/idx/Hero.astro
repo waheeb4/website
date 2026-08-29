@@ -34,23 +34,24 @@ const Phrase = ["Charting", "the", "Deep", "Frontier"];
 
 <style>
   .hero-section {
-    --charting-top: 7.5vw;
+    --desktop-vertical-offset: 0rem;
+    --charting-top: calc(7.5vw + var(--desktop-vertical-offset));
     --charting-left: 5.8vw;
     --charting-size: 8.55vw;
-    --the-top: 5.6vw;
+    --the-top: calc(5.6vw + var(--desktop-vertical-offset));
     --the-left: 68.5vw;
     --the-size: 5.7vw;
-    --deep-top: 9.5vw;
+    --deep-top: calc(9.5vw + var(--desktop-vertical-offset));
     --deep-left: 67vw;
     --deep-size: 10.45vw;
-    --frontier-top: 37vw;
+    --frontier-top: calc(37vw + var(--desktop-vertical-offset));
     --frontier-left: 28.6vw;
     --frontier-size: 11.685vw;
-    --rov-top: 5.3vw;
+    --rov-top: calc(5.3vw + var(--desktop-vertical-offset));
     --rov-left: 53.3vw;
     --rov-width: 51.205vw;
     --rov-rotation: -20deg;
-    --subtitle-top: 47vw;
+    --subtitle-top: calc(47vw + var(--desktop-vertical-offset));
     --subtitle-left: 36vw;
     --subtitle-size: 1.1875vw;
 
@@ -64,7 +65,6 @@ const Phrase = ["Charting", "the", "Deep", "Frontier"];
     position: absolute;
     z-index: 1;
     inset: 0;
-    margin: 0;
     pointer-events: none;
   }
 
@@ -80,7 +80,7 @@ const Phrase = ["Charting", "the", "Deep", "Frontier"];
   #zero {
     top: var(--charting-top);
     left: var(--charting-left);
-    color: #192455;
+    color: var(--navy);
     font-family: var(--font-plus-jakarta-sans), sans-serif;
     font-size: var(--charting-size);
     font-weight: 800;
@@ -149,7 +149,6 @@ const Phrase = ["Charting", "the", "Deep", "Frontier"];
     z-index: 3;
     top: var(--subtitle-top);
     left: var(--subtitle-left);
-    margin: 0;
     color: #6a82b6;
     font-family: ui-monospace, monospace;
     font-size: var(--subtitle-size);
@@ -228,15 +227,19 @@ const Phrase = ["Charting", "the", "Deep", "Frontier"];
     }
   }
 
-  @media (width < 48rem),
-    (min-width: 48rem) and (max-width: 64rem) and (orientation: portrait) {
+  @media (min-width: 64rem) {
+    .hero-section {
+      --desktop-vertical-offset: 4rem;
+    }
+  }
+
+  @media (width < 48rem) {
     .hero-section {
       display: grid;
       align-content: center;
       gap: 2.5rem;
       min-block-size: 100svh;
       padding: 6rem 1.25rem 3rem;
-      box-sizing: border-box;
     }
 
     .hero-title,
@@ -275,13 +278,22 @@ const Phrase = ["Charting", "the", "Deep", "Frontier"];
     .hero-paragraph {
       justify-self: center;
       max-inline-size: 24rem;
-      font-size: 0.8rem;
+      font-size: clamp(0.625rem, 3vw, 0.75rem);
+      white-space: nowrap;
     }
   }
 
   @media (min-width: 48rem) and (max-width: 64rem) and (orientation: portrait) {
-    .hero-section {
-      min-block-size: auto;
+    .hero-title {
+      transform: translateY(4rem);
+    }
+
+    .hero-position {
+      transform: translateX(-50%) translateY(4rem) rotate(var(--rov-rotation));
+    }
+
+    .hero-paragraph {
+      top: 55.5vw;
     }
   }
 </style>

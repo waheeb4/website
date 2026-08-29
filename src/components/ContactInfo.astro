@@ -73,7 +73,7 @@ const contactLink: ContactLink[] = [
     grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
     align-items: center;
     gap: 1rem;
-    background: #223064;
+    background: var(--navy);
     padding: 0.3rem 0.3rem 0.3rem;
   }
 
@@ -87,23 +87,23 @@ const contactLink: ContactLink[] = [
     pointer-events: none;
     background: linear-gradient(
       to bottom,
-      rgb(34 48 100 / 0) 0%,
-      rgb(34 48 100 / 1%) 6%,
-      rgb(34 48 100 / 2%) 12%,
-      rgb(34 48 100 / 4%) 18%,
-      rgb(34 48 100 / 6%) 24%,
-      rgb(34 48 100 / 9%) 30%,
-      rgb(34 48 100 / 12%) 36%,
-      rgb(34 48 100 / 16%) 42%,
-      rgb(34 48 100 / 21%) 48%,
-      rgb(34 48 100 / 28%) 54%,
-      rgb(34 48 100 / 36%) 60%,
-      rgb(34 48 100 / 45%) 66%,
-      rgb(34 48 100 / 55%) 72%,
-      rgb(34 48 100 / 66%) 78%,
-      rgb(34 48 100 / 78%) 84%,
-      rgb(34 48 100 / 90%) 92%,
-      #223064 100%
+      color-mix(in srgb, var(--navy) 0%, transparent) 0%,
+      color-mix(in srgb, var(--navy) 1%, transparent) 6%,
+      color-mix(in srgb, var(--navy) 2%, transparent) 12%,
+      color-mix(in srgb, var(--navy) 4%, transparent) 18%,
+      color-mix(in srgb, var(--navy) 6%, transparent) 24%,
+      color-mix(in srgb, var(--navy) 9%, transparent) 30%,
+      color-mix(in srgb, var(--navy) 12%, transparent) 36%,
+      color-mix(in srgb, var(--navy) 16%, transparent) 42%,
+      color-mix(in srgb, var(--navy) 21%, transparent) 48%,
+      color-mix(in srgb, var(--navy) 28%, transparent) 54%,
+      color-mix(in srgb, var(--navy) 36%, transparent) 60%,
+      color-mix(in srgb, var(--navy) 45%, transparent) 66%,
+      color-mix(in srgb, var(--navy) 55%, transparent) 72%,
+      color-mix(in srgb, var(--navy) 66%, transparent) 78%,
+      color-mix(in srgb, var(--navy) 78%, transparent) 84%,
+      color-mix(in srgb, var(--navy) 90%, transparent) 92%,
+      var(--navy) 100%
     );
   }
 
@@ -112,10 +112,9 @@ const contactLink: ContactLink[] = [
     font-family: var(--font-special-gothic-expanded-one), sans-serif;
     font-size: 1.05rem;
     letter-spacing: 0.05em;
-    color: #0f9cd8;
+    color: var(--blue);
     text-transform: uppercase;
     line-height: 1;
-    margin: 0;
   }
 
   .contact-links {
@@ -132,15 +131,14 @@ const contactLink: ContactLink[] = [
     width: 2.75rem;
     height: 2.75rem;
     place-items: center;
-    color: #0f9cd8;
+    color: var(--blue);
   }
 
   .contact-icon {
     transition: transform 250ms ease;
   }
 
-  .contact-icon:hover,
-  .contact-link:focus-visible {
+  .contact-icon:hover {
     transform: scale(1.2);
   }
 
@@ -158,9 +156,52 @@ const contactLink: ContactLink[] = [
   }
 
   .contact-brand small {
-    color: rgb(254 254 254 / 52%);
+    color: color-mix(in srgb, var(--white) 52%, transparent);
     font-family: sans-serif;
     font-size: 0.75rem;
     letter-spacing: 0.05em;
+  }
+
+  @media (width < 48rem),
+    (min-width: 48rem) and (max-width: 64rem) and (orientation: portrait) {
+    .contact {
+      gap: 0.375rem;
+      padding: 0.2rem;
+    }
+
+    .contact-title {
+      padding-left: 0.2rem;
+      font-size: 0.65rem;
+      letter-spacing: 0.01em;
+      white-space: nowrap;
+    }
+
+    .contact-links {
+      gap: 0;
+    }
+
+    .contact-link {
+      width: 2.25rem;
+      height: 2.25rem;
+    }
+
+    .contact-icon {
+      width: 1rem;
+      height: 1rem;
+    }
+
+    .contact-brand {
+      gap: 0.1rem;
+    }
+
+    .contact-logo {
+      width: auto;
+      height: 1.5rem;
+    }
+
+    .contact-brand small {
+      font-size: 0.625rem;
+      letter-spacing: 0.03em;
+    }
   }
 </style>

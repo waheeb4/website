@@ -16,14 +16,12 @@ export interface Content {
   body: string;
 }
 
-export interface Cards extends Content {
+export interface Card extends Content {
   image: ImageMetadata;
   alt: string;
-  imageWidth: number;
-  imageHeight: number;
 }
 
-export interface Achievements extends Content {
+export interface Achievement extends Content {
   international: string;
 }
 
