@@ -3,32 +3,26 @@ import { Image } from "astro:assets";
 import Carry from "../../assets/carry.jpg";
 import Pool from "../../assets/pool.jpg";
 import Team from "../../assets/team.jpeg";
-import type { Cards } from "../../types";
+import type { Card } from "../../types";
 
-export const cards: Cards[] = [
+export const cards: Card[] = [
   {
     title: "Who We Are",
     body: "Founded in 2024 at the Arab Academy for Science, Technology & Maritime Transport (AASTMT), Triton is a student-led engineering team competing in the MATE ROV International Competition. We combine mechanical, electrical, software and non-technical talent to design ROVs that tackle real-world underwater challenges. Every member brings a different discipline to the table united by a shared drive to build something that works under pressure, literally and figuratively.",
     image: Pool,
     alt: "Poolside post mission celebration",
-    imageWidth: 1200,
-    imageHeight: 800,
   },
   {
     title: "Competition",
     body: "MATE ROV Competition is one of the most rigorous student engineering challenges in the world. Teams design, build, and pilot remotely operated vehicles to complete real underwater mission tasks modelled on the work of professional ocean engineers. We compete at the international level, measured not just on technical performance but on documentation, presentation, and professional standards.",
     image: Carry,
     alt: "Members carrying the remotely operated vehicle post mission",
-    imageWidth: 1200,
-    imageHeight: 800,
   },
   {
     title: "How We Work",
     body: "Our team runs as four interconnected divisions: Mechanical, Electrical, Software, and Non-Technical. Each division owns its domain end-to-end from design and fabrication to testing and documentation. We operate on a real project cycle: scoped deliverables, integration reviews, and a shared deadline with a competition to win on the calendar.",
     image: Team,
     alt: "Team photo",
-    imageWidth: 1200,
-    imageHeight: 800,
   },
 ];
 ---
@@ -47,8 +41,8 @@ export const cards: Cards[] = [
           <Image
             class="about-card-img"
             src={card.image}
-            width={card.imageWidth}
-            height={card.imageHeight}
+            width={1200}
+            height={800}
             fit="cover"
             alt={card.alt}
           />
@@ -197,7 +191,7 @@ export const cards: Cards[] = [
   .about-card-body {
     grid-column: 1;
     margin-inline: 19% 10%;
-    color: #192455;
+    color: var(--navy);
     opacity: 0;
     transform: translateY(1rem);
     transition:
@@ -207,8 +201,8 @@ export const cards: Cards[] = [
 
   .about-card-title {
     grid-row: 1;
-    margin-block: 0 24px;
-    color: #0f9cd8;
+    margin-bottom: 24px;
+    color: var(--blue);
     font-family: var(--font-special-gothic-expanded-one), sans-serif;
     font-size: clamp(2rem, 3vw, 4rem);
     letter-spacing: 0.02em;
@@ -218,7 +212,6 @@ export const cards: Cards[] = [
 
   .about-card-body {
     grid-row: 2;
-    margin-block: 0;
     font-family: var(--font-plus-jakarta-sans), sans-serif;
     font-size: clamp(13px, 1.4vw, 20px);
     font-weight: 400;
@@ -313,7 +306,7 @@ export const cards: Cards[] = [
     overflow: hidden;
     border: 0;
     background: transparent;
-    color: #fff;
+    color: var(--white);
     cursor: pointer;
     font-size: 1.75rem;
     line-height: 1;
@@ -336,9 +329,9 @@ export const cards: Cards[] = [
     left: 50%;
     width: 42px;
     height: 42px;
-    border: 2px solid rgb(255 255 255 / 95%);
+    border: 2px solid color-mix(in srgb, var(--white) 95%, transparent);
     border-radius: 50%;
-    background: rgb(15 156 216 / 85%);
+    background: color-mix(in srgb, var(--blue) 85%, transparent);
     content: "";
     transform: translate(-50%, -50%);
     transition: transform 450ms cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -347,7 +340,6 @@ export const cards: Cards[] = [
   .about-card-controls [data-action] span {
     position: relative;
     z-index: 1;
-    box-sizing: border-box;
     width: 0.75rem;
     height: 0.75rem;
     border: solid currentColor;
@@ -363,8 +355,7 @@ export const cards: Cards[] = [
     transform: translateX(-0.125rem) rotate(-45deg);
   }
 
-  .about-card-controls [data-action]:hover::before,
-  .about-card-controls [data-action]:focus-visible::before {
+  .about-card-controls [data-action]:hover::before {
     transform: translate(-50%, -50%) scale(22);
   }
 
@@ -374,7 +365,8 @@ export const cards: Cards[] = [
     pointer-events: none;
   }
 
-  @media (max-width: 64rem) {
+  @media (width < 48rem),
+    (min-width: 48rem) and (max-width: 64rem) and (orientation: portrait) {
     .about-section {
       --about-image-left: 50%;
       --about-image-width: min(78vw, 420px);

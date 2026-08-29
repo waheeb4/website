@@ -38,6 +38,7 @@ const membersData = JSON.stringify(optimizedMembers);
 
 <BaseLayout {metadata}>
   <section class="members-section">
+    <h1 class="members-page-title">Members</h1>
     <div class="members-heading">
       <button
         data-action="prev"
@@ -46,7 +47,7 @@ const membersData = JSON.stringify(optimizedMembers);
       >
         <span aria-hidden="true"></span>
       </button>
-      <h3 class="members-year"></h3>
+      <h2 class="members-year"></h2>
       <button data-action="next" type="button" aria-label="Show next team year">
         <span aria-hidden="true"></span>
       </button>
@@ -109,6 +110,8 @@ const membersData = JSON.stringify(optimizedMembers);
         if (!roster) return;
 
         if (year) year.textContent = `${roster.year}`;
+        prevButton?.toggleAttribute("disabled", index === 0);
+        nextButton?.toggleAttribute("disabled", index === members.length - 1);
 
         const memberElements = roster.member.map((member) => {
           const memberElement = document.createElement("div");
@@ -145,8 +148,6 @@ const membersData = JSON.stringify(optimizedMembers);
             const linkElement = document.createElement("a");
             linkElement.classList.add("member-link");
             linkElement.href = link.link;
-            linkElement.target = "_blank";
-            linkElement.rel = "noopener noreferrer";
             linkElement.setAttribute(
               "aria-label",
               `${member.firstName}'s ${link.label}`,
@@ -199,6 +200,16 @@ const membersData = JSON.stringify(optimizedMembers);
   </script>
 
   <style is:global>
+    .members-page-title {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+      clip-path: inset(50%);
+      white-space: nowrap;
+    }
+
     .members-section {
       padding: clamp(6.5rem, 12vw, 9rem) clamp(1rem, 4vw, 3rem)
         clamp(9rem, 16vw, 14rem);
@@ -225,9 +236,8 @@ const membersData = JSON.stringify(optimizedMembers);
       position: relative;
       z-index: 2;
       min-width: 4ch;
-      margin: 0;
       padding-inline: clamp(1.25rem, 4vw, 3rem);
-      color: #0f9cd8;
+      color: var(--blue);
       font-family: var(--font-plus-jakarta-sans), sans-serif;
       font-size: clamp(2.5rem, 7vw, 4.75rem);
       font-weight: 800;
@@ -247,7 +257,7 @@ const membersData = JSON.stringify(optimizedMembers);
       border-radius: 0;
       padding: 0;
       background: transparent;
-      color: #fefefe;
+      color: var(--white);
       cursor: pointer;
       isolation: isolate;
       font:
@@ -262,7 +272,7 @@ const membersData = JSON.stringify(optimizedMembers);
       position: absolute;
       top: 0;
       z-index: 0;
-      width: calc(100% + clamp(3rem, 7vw, 1rem));
+      width: calc(100% + clamp(1rem, 7vw, 3rem));
       height: 100%;
       content: "";
       pointer-events: none;
@@ -272,23 +282,23 @@ const membersData = JSON.stringify(optimizedMembers);
       left: 0;
       background: linear-gradient(
         to right,
-        #223064 0%,
-        rgb(34 48 100 / 90%) 8%,
-        rgb(34 48 100 / 78%) 16%,
-        rgb(34 48 100 / 66%) 22%,
-        rgb(34 48 100 / 55%) 28%,
-        rgb(34 48 100 / 45%) 34%,
-        rgb(34 48 100 / 36%) 40%,
-        rgb(34 48 100 / 28%) 46%,
-        rgb(34 48 100 / 21%) 52%,
-        rgb(34 48 100 / 16%) 58%,
-        rgb(34 48 100 / 12%) 64%,
-        rgb(34 48 100 / 9%) 70%,
-        rgb(34 48 100 / 6%) 76%,
-        rgb(34 48 100 / 4%) 82%,
-        rgb(34 48 100 / 2%) 88%,
-        rgb(34 48 100 / 1%) 94%,
-        rgb(34 48 100 / 0%) 100%
+        var(--navy) 0%,
+        color-mix(in srgb, var(--navy) 90%, transparent) 8%,
+        color-mix(in srgb, var(--navy) 78%, transparent) 16%,
+        color-mix(in srgb, var(--navy) 66%, transparent) 22%,
+        color-mix(in srgb, var(--navy) 55%, transparent) 28%,
+        color-mix(in srgb, var(--navy) 45%, transparent) 34%,
+        color-mix(in srgb, var(--navy) 36%, transparent) 40%,
+        color-mix(in srgb, var(--navy) 28%, transparent) 46%,
+        color-mix(in srgb, var(--navy) 21%, transparent) 52%,
+        color-mix(in srgb, var(--navy) 16%, transparent) 58%,
+        color-mix(in srgb, var(--navy) 12%, transparent) 64%,
+        color-mix(in srgb, var(--navy) 9%, transparent) 70%,
+        color-mix(in srgb, var(--navy) 6%, transparent) 76%,
+        color-mix(in srgb, var(--navy) 4%, transparent) 82%,
+        color-mix(in srgb, var(--navy) 2%, transparent) 88%,
+        color-mix(in srgb, var(--navy) 1%, transparent) 94%,
+        color-mix(in srgb, var(--navy) 0%, transparent) 100%
       );
     }
 
@@ -296,41 +306,42 @@ const membersData = JSON.stringify(optimizedMembers);
       right: 0;
       background: linear-gradient(
         to left,
-        #223064 0%,
-        rgb(34 48 100 / 90%) 8%,
-        rgb(34 48 100 / 78%) 16%,
-        rgb(34 48 100 / 66%) 22%,
-        rgb(34 48 100 / 55%) 28%,
-        rgb(34 48 100 / 45%) 34%,
-        rgb(34 48 100 / 36%) 40%,
-        rgb(34 48 100 / 28%) 46%,
-        rgb(34 48 100 / 21%) 52%,
-        rgb(34 48 100 / 16%) 58%,
-        rgb(34 48 100 / 12%) 64%,
-        rgb(34 48 100 / 9%) 70%,
-        rgb(34 48 100 / 6%) 76%,
-        rgb(34 48 100 / 4%) 82%,
-        rgb(34 48 100 / 2%) 88%,
-        rgb(34 48 100 / 1%) 94%,
-        rgb(34 48 100 / 0%) 100%
+        var(--navy) 0%,
+        color-mix(in srgb, var(--navy) 90%, transparent) 8%,
+        color-mix(in srgb, var(--navy) 78%, transparent) 16%,
+        color-mix(in srgb, var(--navy) 66%, transparent) 22%,
+        color-mix(in srgb, var(--navy) 55%, transparent) 28%,
+        color-mix(in srgb, var(--navy) 45%, transparent) 34%,
+        color-mix(in srgb, var(--navy) 36%, transparent) 40%,
+        color-mix(in srgb, var(--navy) 28%, transparent) 46%,
+        color-mix(in srgb, var(--navy) 21%, transparent) 52%,
+        color-mix(in srgb, var(--navy) 16%, transparent) 58%,
+        color-mix(in srgb, var(--navy) 12%, transparent) 64%,
+        color-mix(in srgb, var(--navy) 9%, transparent) 70%,
+        color-mix(in srgb, var(--navy) 6%, transparent) 76%,
+        color-mix(in srgb, var(--navy) 4%, transparent) 82%,
+        color-mix(in srgb, var(--navy) 2%, transparent) 88%,
+        color-mix(in srgb, var(--navy) 1%, transparent) 94%,
+        color-mix(in srgb, var(--navy) 0%, transparent) 100%
       );
     }
 
     .members-heading [data-action]:hover {
-      color: #0f9cd8;
+      color: var(--blue);
     }
 
-    .members-heading [data-action]:focus-visible {
-      position: relative;
-      z-index: 1;
-      outline: 3px solid #0f9cd8;
-      outline-offset: -3px;
+    .members-heading [data-action]:disabled {
+      cursor: default;
+      opacity: 0.45;
+    }
+
+    .members-heading [data-action]:disabled:hover {
+      color: var(--white);
     }
 
     .members-heading [data-action] span {
       position: relative;
       z-index: 1;
-      box-sizing: border-box;
       width: 0.75rem;
       height: 0.75rem;
       border: solid currentColor;
@@ -359,8 +370,8 @@ const membersData = JSON.stringify(optimizedMembers);
       min-height: 400px;
       overflow: hidden;
       border-radius: 20px;
-      background: #fefefe;
-      box-shadow: 0 8px 32px rgb(25 36 85 / 12%);
+      background: var(--white);
+      box-shadow: 0 8px 32px color-mix(in srgb, var(--navy) 12%, transparent);
     }
 
     .member-image {
@@ -381,7 +392,7 @@ const membersData = JSON.stringify(optimizedMembers);
 
     .member-first-name {
       margin-top: 1rem;
-      color: #192455;
+      color: var(--navy);
       font-size: 1.625rem;
       font-weight: 800;
       letter-spacing: -0.01em;
@@ -389,7 +400,7 @@ const membersData = JSON.stringify(optimizedMembers);
     }
 
     .member-last-name {
-      color: rgb(25 36 85 / 65%);
+      color: color-mix(in srgb, var(--navy) 65%, transparent);
       font-size: 0.9375rem;
       font-weight: 600;
       letter-spacing: 0.06em;
@@ -400,7 +411,7 @@ const membersData = JSON.stringify(optimizedMembers);
     .member-role {
       margin-top: 0.35rem;
       margin-bottom: 1rem;
-      color: #0f9cd8;
+      color: var(--blue);
       font-size: 0.9375rem;
       line-height: 1.3;
     }
@@ -420,15 +431,9 @@ const membersData = JSON.stringify(optimizedMembers);
         transform 200ms ease;
     }
 
-    .member-link:hover,
-    .member-link:focus-visible {
+    .member-link:hover {
       opacity: 1;
       transform: scale(1.15);
-    }
-
-    .member-link:focus-visible {
-      outline: 2px solid #0f9cd8;
-      outline-offset: 3px;
     }
 
     .member-link-icon {
@@ -438,7 +443,7 @@ const membersData = JSON.stringify(optimizedMembers);
     }
 
     .member--supervisor {
-      box-shadow: inset 0 0 0 2px #0f9cd8;
+      box-shadow: inset 0 0 0 2px var(--blue);
       transition:
         box-shadow 350ms ease,
         transform 350ms cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -451,13 +456,14 @@ const membersData = JSON.stringify(optimizedMembers);
 
     .member--supervisor:hover {
       box-shadow:
-        inset 0 0 0 2px #0f9cd8,
-        0 24px 60px rgb(25 36 85 / 20%),
-        0 0 40px rgb(15 156 216 / 35%);
+        inset 0 0 0 2px var(--blue),
+        0 24px 60px color-mix(in srgb, var(--navy) 20%, transparent),
+        0 0 40px color-mix(in srgb, var(--blue) 35%, transparent);
       transform: translateY(-10px) scale(1.03);
     }
 
-    @media (max-width: 30rem) {
+    @media (width < 48rem),
+      (min-width: 48rem) and (max-width: 64rem) and (orientation: portrait) {
       .members-section {
         padding-inline: 1rem;
       }
