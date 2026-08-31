@@ -28,7 +28,7 @@ export default defineConfig({
       {
         icon: "github",
         link: "https://github.com/AAST-Triton-ROVs",
-        ariaLabel: "AASTMT Triton on GitHub"
+        ariaLabel: "AASTMT Triton on GitHub",
       },
     ],
   },
