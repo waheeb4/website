@@ -28,3 +28,7 @@ AGENTS.md
 
 # migration
 reference/
+
+# vitepress generated files
+docs/.vitepress/cache/
+docs/.vitepress/dist/
