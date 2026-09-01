@@ -3,10 +3,7 @@
   --navy: #192455;
   --white: #fefefe;
   --page-background: #eef2ff;
-}
 
-html {
-  min-block-size: 100%;
   background:
     radial-gradient(
       ellipse 70% 55% at 15% 25%,
@@ -51,10 +48,8 @@ p {
 
 body {
   min-height: 100vh;
-  min-height: 100svh;
   display: flex;
   flex-direction: column;
-  background: transparent;
 }
 
 :focus-visible {
