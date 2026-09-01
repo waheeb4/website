@@ -61,18 +61,25 @@ const navigation: Link[] = [
   .navigation::before {
     position: absolute;
     z-index: -1;
-    top: 0;
+    top: calc(-1 * env(safe-area-inset-top, 0px));
     right: 0;
     left: 0;
-    height: calc(100% + 3rem);
+    height: calc(100% + env(safe-area-inset-top, 0px) + 5rem);
     background: color-mix(in srgb, var(--white) 9%, transparent);
     content: "";
     pointer-events: none;
+    -webkit-backdrop-filter: blur(16px);
     backdrop-filter: blur(12px);
+    -webkit-mask-image: linear-gradient(
+      to bottom,
+      black 0%,
+      black 52%,
+      transparent 100%
+    );
     mask-image: linear-gradient(
       to bottom,
       black 0%,
-      black 35%,
+      black 52%,
       transparent 100%
     );
   }
@@ -121,7 +128,7 @@ const navigation: Link[] = [
     (min-width: 48rem) and (max-width: 64rem) and (orientation: portrait) {
     .navigation {
       gap: 0.75rem;
-      padding: 0.75rem 1rem;
+      padding: calc(0.75rem + env(safe-area-inset-top, 0px)) 1rem 0.75rem;
     }
 
     .navigation-corner {
