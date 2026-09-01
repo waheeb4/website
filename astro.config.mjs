@@ -1,7 +1,10 @@
 // @ts-check
 import { defineConfig, fontProviders } from "astro/config";
+import sitemap from "@astrojs/sitemap";
 
 export default defineConfig({
+  site: "https://aastmt-triton.com",
+  integrations: [sitemap()],
   fonts: [
     {
       name: "Special Gothic Expanded One",
