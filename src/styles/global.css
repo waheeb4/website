@@ -3,7 +3,17 @@
   --navy: #192455;
   --white: #fefefe;
   --page-background: #eef2ff;
+}
 
+html {
+  background-color: var(--page-background);
+}
+
+body {
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
   background:
     radial-gradient(
       ellipse 70% 55% at 15% 25%,
@@ -44,12 +54,6 @@ h2,
 h3,
 p {
   margin: 0;
-}
-
-body {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
 }
 
 :focus-visible {
