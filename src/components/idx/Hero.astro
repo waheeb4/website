@@ -6,59 +6,71 @@ const Phrase = ["Charting", "the", "Deep", "Frontier"];
 ---
 
 <section class="hero-section">
-  <h1 class="hero-title" aria-label="Charting the Deep Frontier">
-    <span class="hero-word" id="zero" aria-hidden="true">{Phrase[0]}</span>
-    <span class="hero-word" id="one" aria-hidden="true">{Phrase[1]}</span>
-    <span class="hero-word" id="two" aria-hidden="true">{Phrase[2]}</span>
-    <span class="hero-word" id="three" aria-hidden="true">{Phrase[3]}</span>
-  </h1>
+  <div class="hero-canvas">
+    <h1 class="hero-title" aria-label="Charting the Deep Frontier">
+      <span class="hero-word" id="zero" aria-hidden="true">{Phrase[0]}</span>
+      <span class="hero-word" id="one" aria-hidden="true">{Phrase[1]}</span>
+      <span class="hero-word" id="two" aria-hidden="true">{Phrase[2]}</span>
+      <span class="hero-word" id="three" aria-hidden="true">{Phrase[3]}</span>
+    </h1>
 
-  <div class="hero-position">
-    <div class="hero-reveal">
-      <Image
-        class="hero"
-        src={HeroLogo}
-        alt="Triton's Shadow Wing remotely operated vehicle"
-        priority
-      />
+    <div class="hero-position">
+      <div class="hero-reveal">
+        <Image
+          class="hero"
+          src={HeroLogo}
+          alt="Triton's Shadow Wing remotely operated vehicle"
+          priority
+        />
+      </div>
     </div>
-  </div>
 
-  <p class="hero-paragraph">
-    <span class="hero-paragraph-text"
-      >built by triton, tested by the ocean.</span
-    >
-    <span class="hero-paragraph-cursor" aria-hidden="true">|</span>
-  </p>
+    <p class="hero-paragraph">
+      <span class="hero-paragraph-text"
+        >built by triton, tested by the ocean.</span
+      >
+      <span class="hero-paragraph-cursor" aria-hidden="true">|</span>
+    </p>
+  </div>
 </section>
 
 <style>
   .hero-section {
-    --desktop-vertical-offset: 0rem;
-    --charting-top: calc(7.5vw + var(--desktop-vertical-offset));
-    --charting-left: 5.8vw;
-    --charting-size: 8.55vw;
-    --the-top: calc(5.6vw + var(--desktop-vertical-offset));
-    --the-left: 68.5vw;
-    --the-size: 5.7vw;
-    --deep-top: calc(9.5vw + var(--desktop-vertical-offset));
-    --deep-left: 67vw;
-    --deep-size: 10.45vw;
-    --frontier-top: calc(37vw + var(--desktop-vertical-offset));
-    --frontier-left: 28.6vw;
-    --frontier-size: 11.685vw;
-    --rov-top: calc(5.3vw + var(--desktop-vertical-offset));
-    --rov-left: 53.3vw;
-    --rov-width: 51.205vw;
-    --rov-rotation: -20deg;
-    --subtitle-top: calc(47vw + var(--desktop-vertical-offset));
-    --subtitle-left: 36vw;
-    --subtitle-size: 1.1875vw;
-
     position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     min-block-size: 100svh;
     overflow: clip;
     isolation: isolate;
+  }
+
+  .hero-canvas {
+    --desktop-vertical-offset: 0rem;
+    --charting-top: calc(7.5cqw + var(--desktop-vertical-offset));
+    --charting-left: 5.8cqw;
+    --charting-size: 8.55cqw;
+    --the-top: calc(5.6cqw + var(--desktop-vertical-offset));
+    --the-left: 68.5cqw;
+    --the-size: 5.7cqw;
+    --deep-top: calc(9.5cqw + var(--desktop-vertical-offset));
+    --deep-left: 67cqw;
+    --deep-size: 10.45cqw;
+    --frontier-top: calc(37cqw + var(--desktop-vertical-offset));
+    --frontier-left: 28.6cqw;
+    --frontier-size: 11.685cqw;
+    --rov-top: calc(5.3cqw + var(--desktop-vertical-offset));
+    --rov-left: 53.3cqw;
+    --rov-width: 51.205cqw;
+    --rov-rotation: -20deg;
+    --subtitle-top: calc(47cqw + var(--desktop-vertical-offset));
+    --subtitle-left: 36cqw;
+    --subtitle-size: 1.1875cqw;
+
+    position: relative;
+    inline-size: min(100%, calc(100svh * 16 / 9));
+    aspect-ratio: 16 / 9;
+    container-type: inline-size;
   }
 
   .hero-title {
@@ -138,8 +150,8 @@ const Phrase = ["Charting", "the", "Deep", "Frontier"];
     display: block;
     inline-size: 100%;
     block-size: auto;
-    filter: drop-shadow(0 1.7vw 3vw rgb(0 5 40 / 60%))
-      drop-shadow(0 0.6vw 1.4vw rgb(26 86 219 / 32%));
+    filter: drop-shadow(0 1.7cqw 3cqw rgb(0 5 40 / 60%))
+      drop-shadow(0 0.6cqw 1.4cqw rgb(26 86 219 / 32%));
     will-change: transform;
     animation: rov-float 2.8s ease-in-out 1.15s infinite alternate;
   }
@@ -240,6 +252,10 @@ const Phrase = ["Charting", "the", "Deep", "Frontier"];
       gap: 2.5rem;
       min-block-size: 100svh;
       padding: 6rem 1.25rem 3rem;
+    }
+
+    .hero-canvas {
+      display: contents;
     }
 
     .hero-title,
