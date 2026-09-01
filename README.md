@@ -6,7 +6,7 @@ Built with [Astro](https://astro.build). The technical documentation site is a
 separate [VitePress](https://vitepress.dev) project that lives alongside it in
 `docs/`.
 
-## 🚀 Project structure
+## Project structure
 
 ```text
 /
@@ -29,7 +29,7 @@ separate [VitePress](https://vitepress.dev) project that lives alongside it in
 └── astro.config.mjs
 ```
 
-## 🧞 Commands
+## Commands
 
 All commands are run from the root of the project, from a terminal:
 
@@ -50,7 +50,7 @@ All commands are run from the root of the project, from a terminal:
 Requires Node ≥ 22.12 (see `engines` in `package.json`). [bun](https://bun.sh)
 is used as the package manager and task runner.
 
-## 🌐 Deployment
+## Deployment
 
 | Site | URL |
 | --- | --- |
@@ -60,8 +60,6 @@ is used as the package manager and task runner.
 These are configured as the `site` option in `astro.config.mjs` and
 `docs/.vitepress/config.ts` respectively, which drives canonical URLs and
 sitemap generation for each.
-
-## 👀 Want to learn more?
 
 - [Astro documentation](https://docs.astro.build)
 - [VitePress documentation](https://vitepress.dev)
