@@ -27,6 +27,7 @@ const { metadata } = Astro.props;
     <BaseHead {metadata} />
   </head>
   <body>
+    <div class="safari-top-bleed" aria-hidden="true"></div>
     <Navigation />
     <main>
       <slot />

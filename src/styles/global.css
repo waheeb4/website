@@ -75,6 +75,26 @@ main {
   flex: 1;
 }
 
+.safari-top-bleed {
+  display: none;
+}
+
+@supports (-webkit-touch-callout: none) {
+  @media (width < 48rem) {
+    .safari-top-bleed {
+      position: fixed;
+      z-index: 9;
+      top: -8px;
+      right: 0;
+      left: 0;
+      display: block;
+      height: 16px;
+      background-color: #e1e8ff;
+      pointer-events: none;
+    }
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
