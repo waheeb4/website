@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://aastmt-triton.com/sitemap-index.xml
