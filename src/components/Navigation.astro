@@ -61,10 +61,10 @@ const navigation: Link[] = [
   .navigation::before {
     position: absolute;
     z-index: -1;
-    top: -1;
+    top: calc(-1 * env(safe-area-inset-top, 0px));
     right: 0;
     left: 0;
-    height: calc(100% + 3em);
+    height: calc(100% + env(safe-area-inset-top, 0px) + 3rem);
     background: color-mix(in srgb, var(--white) 9%, transparent);
     content: "";
     pointer-events: auto;
