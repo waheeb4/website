@@ -27,7 +27,7 @@ const contactLink: ContactLink[] = [
 ];
 ---
 
-<footer class="contact" data-contact-footer>
+<footer class="contact">
   <h2 class="contact-title">Contact Us</h2>
   <ul class="contact-links" aria-label="Contact links">
     {
@@ -67,28 +67,6 @@ const contactLink: ContactLink[] = [
 </footer>
 
 <div class="safari-bottom-bleed" aria-hidden="true"></div>
-
-<script>
-  const setupSafariBottomBleed = () => {
-    const contact = document.querySelector<HTMLElement>(
-      "[data-contact-footer]",
-    );
-    const bleed = document.querySelector<HTMLElement>(".safari-bottom-bleed");
-
-    if (!contact || !bleed) return;
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        bleed.classList.toggle("is-active", entry.isIntersecting);
-      },
-      { threshold: 0 },
-    );
-
-    observer.observe(contact);
-  };
-
-  document.addEventListener("astro:page-load", setupSafariBottomBleed);
-</script>
 
 <style>
   .contact {
@@ -137,7 +115,7 @@ const contactLink: ContactLink[] = [
 
   @supports (-webkit-touch-callout: none) {
     @media (width < 48rem) {
-      .safari-bottom-bleed.is-active {
+      .safari-bottom-bleed {
         position: fixed;
         z-index: 9;
         right: 0;
