@@ -12,6 +12,7 @@ const navigation: Link[] = [
 ---
 
 <nav class="navigation" aria-label="Primary navigation">
+  <div class="safari-top-bleed" aria-hidden="true"></div>
   <Image
     class="navigation-corner"
     id="triton"
@@ -61,10 +62,10 @@ const navigation: Link[] = [
   .navigation::before {
     position: absolute;
     z-index: -1;
-    top: calc(-1 * env(safe-area-inset-top, 0px));
+    top: 0;
     right: 0;
     left: 0;
-    height: calc(100% + env(safe-area-inset-top, 0px) + 3rem);
+    height: calc(100% + 3rem);
     background: color-mix(in srgb, var(--white) 9%, transparent);
     content: "";
     pointer-events: auto;
@@ -82,6 +83,26 @@ const navigation: Link[] = [
       black 35%,
       transparent 100%
     );
+  }
+
+  .safari-top-bleed {
+    display: none;
+  }
+
+  @supports (-webkit-touch-callout: none) {
+    @media (width < 48rem) {
+      .safari-top-bleed {
+        position: fixed;
+        z-index: -2;
+        top: -8px;
+        right: 0;
+        left: 0;
+        display: block;
+        height: 16px;
+        background-color: #e1e8ff;
+        pointer-events: none;
+      }
+    }
   }
 
   .navigation-corner {
