@@ -1,6 +1,4 @@
-# Triton — AASTMT ROV Team Website
-
-Visit https://aastmt-triton.com
+# AASTMT Triton ROV Website 
 
 Built with [Astro](https://astro.build). The technical documentation site is a
 separate [VitePress](https://vitepress.dev) project that lives alongside it in
@@ -13,15 +11,15 @@ separate [VitePress](https://vitepress.dev) project that lives alongside it in
 ├── src/
 │   ├── assets/              images, video, and fonts processed by Astro
 │   ├── components/
-│   │   ├── idx/              homepage sections: Hero, About, Achievements, Shadow (Shadow Wing ROV)
+│   │   ├── idx/              homepage sections: Hero, About, Achievements, Shadow
 │   │   ├── BaseHead.astro    document <head>: metadata, canonical URL, OG tags
 │   │   ├── Navigation.astro  fixed top navigation
 │   │   └── ContactInfo.astro footer / contact links
 │   ├── content/members.ts    member roster data, grouped by competition year
-│   ├── layouts/BaseLayout.astro
+│   ├── layouts/BaseLayout.astro base layout providing common shell
 │   ├── pages/
 │   │   ├── index.astro       home page
-│   │   └── members.astro     member roster page (client-rendered year pager)
+│   │   └── members.astro     member roster page
 │   ├── styles/global.css
 │   └── types.ts
 ├── public/                   favicons, robots.txt, social preview image
@@ -36,13 +34,12 @@ All commands are run from the root of the project, from a terminal:
 | Command                 | Action                                            |
 | :----------------------- | :------------------------------------------------ |
 | `bun install`             | Install dependencies                              |
-| `bun dev`                 | Start the Astro dev server at `localhost:4321`    |
-| `bun build`               | Build the production site to `./dist/`            |
-| `bun preview`             | Preview the production build locally              |
+| `bun run dev`                 | Start the Astro dev server at `localhost:4321`    |
+| `bun run build`               | Build the production site to `./dist/`            |
+| `bun astro preview`             | Preview the production build locally              |
 | `bun run check`           | Type-check the project (`astro check`)            |
 | `bun run format:check`    | Check formatting with Prettier                    |
 | `bun run format:write`    | Apply Prettier formatting                         |
-| `bun astro ...`           | Run Astro CLI commands, e.g. `astro add`           |
 | `bun run docs:dev`        | Start the VitePress docs dev server                |
 | `bun run docs:build`      | Build the docs site to `docs/.vitepress/dist`      |
 | `bun run docs:preview`    | Preview the built docs site                        |
