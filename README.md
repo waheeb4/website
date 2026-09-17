@@ -33,18 +33,18 @@ All commands are run from the root of the project, from a terminal:
 
 | Command                 | Action                                            |
 | :----------------------- | :------------------------------------------------ |
-| `bun install`             | Install dependencies                              |
-| `bun run dev`                 | Start the Astro dev server at `localhost:4321`    |
-| `bun run build`               | Build the production site to `./dist/`            |
-| `bun astro preview`             | Preview the production build locally              |
-| `bun run check`           | Type-check the project (`astro check`)            |
-| `bun run format:check`    | Check formatting with Prettier                    |
-| `bun run format:write`    | Apply Prettier formatting                         |
-| `bun run docs:dev`        | Start the VitePress docs dev server                |
-| `bun run docs:build`      | Build the docs site to `docs/.vitepress/dist`      |
-| `bun run docs:preview`    | Preview the built docs site                        |
+| `pnpm install`            | Install dependencies                              |
+| `pnpm dev`                | Start the Astro dev server at `localhost:4321`    |
+| `pnpm build`              | Build the production site to `./dist/`            |
+| `pnpm preview`            | Preview the production build locally              |
+| `pnpm check`              | Type-check the project (`astro check`)            |
+| `pnpm format:check`       | Check formatting with Prettier                    |
+| `pnpm format:write`       | Apply Prettier formatting                         |
+| `pnpm docs:dev`           | Start the VitePress docs dev server                |
+| `pnpm docs:build`         | Build the docs site to `docs/.vitepress/dist`      |
+| `pnpm docs:preview`       | Preview the built docs site                        |
 
-Requires Node ≥ 22.12 (see `engines` in `package.json`). [bun](https://bun.sh)
+Requires Node ≥ 22.12 (see `engines` in `package.json`). [pnpm](https://pnpm.io)
 is used as the package manager and task runner.
 
 ## Deployment
